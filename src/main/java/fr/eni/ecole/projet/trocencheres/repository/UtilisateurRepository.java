@@ -1,6 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
-import fr.eni.ecole.projet.trocencheres.model.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
