@@ -32,7 +32,7 @@ public class AdresseRepository {
         }
     };
 
-    public Optional<Adresse> findById(Integer id) {
+    public Optional<Adresse> findById(int id) {
         List<Adresse> list = jdbc.query("select * from ADRESSES where no_adresse = ?", MAPPER, id);
         return list.stream().findFirst();
     }

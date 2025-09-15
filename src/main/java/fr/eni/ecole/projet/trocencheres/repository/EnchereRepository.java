@@ -32,7 +32,7 @@ public class EnchereRepository {
         }
     };
 
-    public List<Enchere> findByArticleId(Integer articleId) {
+    public List<Enchere> findByArticleId(int articleId) {
         return jdbc.query("select * from ENCHERES where no_article = ? order by date_enchere desc", MAPPER, articleId);
     }
 

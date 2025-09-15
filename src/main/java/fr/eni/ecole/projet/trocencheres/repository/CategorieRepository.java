@@ -29,7 +29,7 @@ public class CategorieRepository {
         }
     };
 
-    public Optional<Categorie> findById(Integer id) {
+    public Optional<Categorie> findById(int id) {
         List<Categorie> list = jdbc.query("select * from CATEGORIES where no_categorie = ?", MAPPER, id);
         return list.stream().findFirst();
     }

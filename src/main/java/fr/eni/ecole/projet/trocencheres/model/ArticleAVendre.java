@@ -1,74 +1,44 @@
 package fr.eni.ecole.projet.trocencheres.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "ARTICLES_A_VENDRE")
 public class ArticleAVendre {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "no_article")
-    private Integer noArticle;
-
-    @Column(name = "nom_article")
+    private int noArticle;
     private String nomArticle;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "photo")
-    private Integer photo;
-
-    @Column(name = "date_debut_encheres")
+    private int photo;
     private LocalDate dateDebutEncheres;
-
-    @Column(name = "date_fin_encheres")
     private LocalDate dateFinEncheres;
-
-    @Column(name = "statut_enchere")
-    private Integer statutEnchere;
-
-    @Column(name = "prix_initial")
-    private Integer prixInitial;
-
-    @Column(name = "prix_vente")
-    private Integer prixVente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_utilisateur")
-    private Utilisateur vendeur;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "no_categorie")
-    private Categorie categorie;
-
-    @Column(name = "no_adresse_retrait")
-    private Integer noAdresseRetrait;
+    private int statutEnchere;
+    private int prixInitial;
+    private int prixVente;
+    private String idUtilisateur;
+    private int noCategorie;
+    private int noAdresseRetrait;
 
     // getters/setters
-    public Integer getNoArticle() { return noArticle; }
-    public void setNoArticle(Integer noArticle) { this.noArticle = noArticle; }
+    public int getNoArticle() { return noArticle; }
+    public void setNoArticle(int noArticle) { this.noArticle = noArticle; }
     public String getNomArticle() { return nomArticle; }
     public void setNomArticle(String nomArticle) { this.nomArticle = nomArticle; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public Integer getPhoto() { return photo; }
-    public void setPhoto(Integer photo) { this.photo = photo; }
+    public int getPhoto() { return photo; }
+    public void setPhoto(int photo) { this.photo = photo; }
     public LocalDate getDateDebutEncheres() { return dateDebutEncheres; }
     public void setDateDebutEncheres(LocalDate dateDebutEncheres) { this.dateDebutEncheres = dateDebutEncheres; }
     public LocalDate getDateFinEncheres() { return dateFinEncheres; }
     public void setDateFinEncheres(LocalDate dateFinEncheres) { this.dateFinEncheres = dateFinEncheres; }
-    public Integer getStatutEnchere() { return statutEnchere; }
-    public void setStatutEnchere(Integer statutEnchere) { this.statutEnchere = statutEnchere; }
-    public Integer getPrixInitial() { return prixInitial; }
-    public void setPrixInitial(Integer prixInitial) { this.prixInitial = prixInitial; }
-    public Integer getPrixVente() { return prixVente; }
-    public void setPrixVente(Integer prixVente) { this.prixVente = prixVente; }
-    public Utilisateur getVendeur() { return vendeur; }
-    public void setVendeur(Utilisateur vendeur) { this.vendeur = vendeur; }
-    public Categorie getCategorie() { return categorie; }
-    public void setCategorie(Categorie categorie) { this.categorie = categorie; }
-    public Integer getNoAdresseRetrait() { return noAdresseRetrait; }
-    public void setNoAdresseRetrait(Integer noAdresseRetrait) { this.noAdresseRetrait = noAdresseRetrait; }
+    public int getStatutEnchere() { return statutEnchere; }
+    public void setStatutEnchere(int statutEnchere) { this.statutEnchere = statutEnchere; }
+    public int getPrixInitial() { return prixInitial; }
+    public void setPrixInitial(int prixInitial) { this.prixInitial = prixInitial; }
+    public int getPrixVente() { return prixVente; }
+    public void setPrixVente(int prixVente) { this.prixVente = prixVente; }
+    public String getIdUtilisateur() { return idUtilisateur; }
+    public void setIdUtilisateur(String idUtilisateur) { this.idUtilisateur = idUtilisateur; }
+    public int getNoCategorie() { return noCategorie; }
+    public void setNoCategorie(int noCategorie) { this.noCategorie = noCategorie; }
+    public int getNoAdresseRetrait() { return noAdresseRetrait; }
+    public void setNoAdresseRetrait(int noAdresseRetrait) { this.noAdresseRetrait = noAdresseRetrait; }
 }
