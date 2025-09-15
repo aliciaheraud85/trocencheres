@@ -1,4 +1,4 @@
-package fr.eni.ecole.projet.trocencheres.model;
+package fr.eni.ecole.projet.trocencheres.bo;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package fr.eni.ecole.projet.trocencheres.model;
+package fr.eni.ecole.projet.trocencheres.bo;
 
 public class Adresse {
     private int noAdresse;
@@ -28,7 +28,7 @@ public class Adresse {
     public void setAdresseEni(boolean adresseEni) { this.adresseEni = adresseEni; }
 
     @Override
-    pulbic boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Adresse adresse = (Adresse) obj;

@@ -1,4 +1,4 @@
-package fr.eni.ecole.projet.trocencheres.model;
+package fr.eni.ecole.projet.trocencheres.bo;
 
 import java.time.LocalDate;
 
@@ -75,7 +75,7 @@ public class ArticleAVendre {
                dateFinEncheres.equals(article.dateFinEncheres) &&
                idUtilisateur.equals(article.idUtilisateur);
     }
-    
+
     @Override
     public String toString() {
         return "ArticleAVendre{" +

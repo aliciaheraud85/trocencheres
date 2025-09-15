@@ -1,6 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
-import fr.eni.ecole.projet.trocencheres.model.ArticleAVendre;
+import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

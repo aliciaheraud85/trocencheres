@@ -1,7 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.security;
 
 import fr.eni.ecole.projet.trocencheres.jparepository.UtilisateurJpaRepository;
-import fr.eni.ecole.projet.trocencheres.model.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
