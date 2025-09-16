@@ -27,12 +27,22 @@ public class ArticleAVendreRepository {
             a.setNoArticle(rs.getInt("no_article"));
             a.setNomArticle(rs.getString("nom_article"));
             a.setDescription(rs.getString("description"));
-            a.setPhoto((int) rs.getObject("photo"));
-            a.setDateDebutEncheres(rs.getDate("date_debut_encheres") != null ? rs.getDate("date_debut_encheres").toLocalDate() : null);
-            a.setDateFinEncheres(rs.getDate("date_fin_encheres") != null ? rs.getDate("date_fin_encheres").toLocalDate() : null);
+            // Check for null before casting
+            Object photoObj = rs.getObject("photo");
+            a.setPhoto(photoObj != null ? (int) photoObj : 0); // or null if photo is Integer
+
+            a.setDateDebutEncheres(rs.getDate("date_debut_encheres") != null
+                    ? rs.getDate("date_debut_encheres").toLocalDate()
+                    : null);
+            a.setDateFinEncheres(rs.getDate("date_fin_encheres") != null
+                    ? rs.getDate("date_fin_encheres").toLocalDate()
+                    : null);
             a.setStatutEnchere(rs.getInt("statut_enchere"));
             a.setPrixInitial(rs.getInt("prix_initial"));
-            a.setPrixVente((int) rs.getObject("prix_vente"));
+
+            Object prixVenteObj = rs.getObject("prix_vente");
+            a.setPrixVente(prixVenteObj != null ? (int) prixVenteObj : 0); // or null if Integer
+
             a.setIdUtilisateur(rs.getString("id_utilisateur"));
             a.setNoCategorie(rs.getInt("no_categorie"));
             a.setNoAdresseRetrait(rs.getInt("no_adresse_retrait"));
