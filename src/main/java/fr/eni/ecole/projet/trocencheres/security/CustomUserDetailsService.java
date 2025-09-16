@@ -1,7 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.security;
 
-import fr.eni.ecole.projet.trocencheres.jparepository.UtilisateurJpaRepository;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.repository.UtilisateurRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UtilisateurJpaRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public CustomUserDetailsService(UtilisateurJpaRepository utilisateurRepository) {
+    public CustomUserDetailsService(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;
     }
 
