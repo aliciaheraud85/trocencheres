@@ -8,6 +8,8 @@ public class Enchere {
     private int montantEnchere;
     private LocalDateTime dateEnchere;
 
+    public Enchere() {}
+
     public Enchere(String idUtilisateur, int noArticle, int montantEnchere, LocalDateTime dateEnchere) {
         this.idUtilisateur = idUtilisateur;
         this.noArticle = noArticle;

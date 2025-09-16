@@ -16,6 +16,8 @@ public class ArticleAVendre {
     private int noCategorie;
     private int noAdresseRetrait;
 
+    public ArticleAVendre() {}
+
     public ArticleAVendre(int noArticle, String nomArticle, String description, int photo, LocalDate dateDebutEncheres, LocalDate dateFinEncheres, int statutEnchere, int prixInitial, int prixVente, String idUtilisateur, int noCategorie, int noAdresseRetrait) {
         this.noArticle = noArticle;
         this.nomArticle = nomArticle;

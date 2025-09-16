@@ -11,6 +11,8 @@ public class Utilisateur {
     private boolean administrateur;
     private int noAdresse;
 
+    public Utilisateur() {}
+
     public Utilisateur(String pseudo, String nom, String prenom, String email, String telephone, String motDePasse, int credit, boolean administrateur, int noAdresse) {
         this.pseudo = pseudo;
         this.nom = nom;

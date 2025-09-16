@@ -6,6 +6,8 @@ public class Adresse {
     private String codePostal;
     private String ville;
     private boolean adresseEni;
+
+    public Adresse() {}
     
     public Adresse(int noAdresse, String rue, String codePostal, String ville, boolean adresseEni) {
         this.noAdresse = noAdresse;
