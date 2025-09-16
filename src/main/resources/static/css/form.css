@@ -1,0 +1,9 @@
+form {
+    display: grid;
+    grid-template-colums: 1fr
+
+    >* {
+    margin: .5rem
+    }
+
+}
