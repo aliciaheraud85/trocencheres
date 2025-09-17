@@ -42,7 +42,7 @@ public class UtilisateurRepository {
     }
 
     public String getPasswordByPseudo(String pseudo) {
-        List<Utilisateur> list = jdbc.query("select password from UTILISATEURS where pseudo = ?", MAPPER, pseudo);
+        List<Utilisateur> list = jdbc.query("select mot_de_passe from UTILISATEURS where pseudo = ?", MAPPER, pseudo);
         Optional<Utilisateur> response = list.stream().findFirst();
         if (response.isPresent()){
             return response.get().getMotDePasse();

@@ -1,0 +1,79 @@
+package fr.eni.ecole.projet.trocencheres.security.jwt;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Date;
+
+@Service
+public class JWTService {
+
+//    TODO: add logging (slf4j or eq)
+
+    private final String secretKey;
+
+    @Value("${spring.security.jwtExpirationMs}")
+    private int jwtExpirationMs;
+
+    public JWTService() {
+        try {
+            SecretKey key = KeyGenerator.getInstance("HmacSHA256").generateKey();
+            secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(key())
+                .compact();
+    }
+
+    public String getUsernameFromJwtToken(String token) {
+        return Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(token).getPayload().getSubject();
+    }
+
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
+
+    public boolean validateJwtToken(String authToken) {
+        try {
+            Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
+            return true;
+        } catch (MalformedJwtException e) {
+            System.out.println("Token is invalid: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token is expired: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("Token is unsupported: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty: " + e.getMessage());
+        }
+        return false;
+    }
+}
