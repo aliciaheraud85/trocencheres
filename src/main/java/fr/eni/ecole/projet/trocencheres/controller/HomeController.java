@@ -42,16 +42,19 @@ public class HomeController {
     }
 
     @GetMapping("/auction-details")
-    public void auctionDetails(@RequestParam int id){
+    public String auctionDetails(int id, Model model){
         if(id > 0){
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
-            if(articleById != null)
-                System.out.println(articleById);
-            else
+            if(articleById != null) {
+                model.addAttribute("article", articleById);
+                return "auction-details";
+            }else {
                 System.out.println("This article does not exist");
-
+                return "redirect:/index";
+            }
         }else{
             System.out.println("This id does not exist");
+            return "redirect:/index";
         }
     }
 

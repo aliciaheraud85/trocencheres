@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
 					contentPage=~{:: .center-main})}">
+
+<link rel="stylesheet" data-th-href="@{/css/general.css}">
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
@@ -19,13 +21,17 @@
 
   <main class="center-main">
       <div class="container-fluid">
-              <div class="row align-items-end dateUser">
-                  <div class="col-md-12 text-end mt-3 me-3">
-                        <p>Date du jour : <span th:text="${currentDateFormatted}"></span></p>
-                        <p>Username</p>
-                  </div>
-                  <div class="col-md-12 text-center">
+              <div class="row mt-3">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4 text-center mt-2">
                       <h1>Liste des enchères</h1>
+                  </div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
+                      <p>Date du jour : <span th:text="${currentDateFormatted}"></span></p>
+                      <!-- Change to display user name when logged in -->
+                      <p>Participant : Username</p>
                   </div>
               </div>
               <div class="row p-2">
@@ -39,7 +45,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4"></div>
               </div>
-              <div class="row p-2">
+              <div class="row p-2 mb-5">
                   <div class="col-md-4">
                       <select class="form-select" aria-label="Default select example" name="selectCategory">
                           <option selected>Toutes</option>
@@ -56,13 +62,20 @@
               <div class="row mb-3">
                   <div class="col-md-4" th:each="article : ${articles}">
                       <div class="card mb-3">
-                          <div class="card-header">
-                              <a href=""><h5 th:text="${article.nomArticle}"></h5></a>
+                          <div class="card-header text-center">
+                              <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>
                           </div>
                           <div class="card-body">
-                              <p>Prix : <span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente}"></span> point(s)</p>
-                              <p>Fin de l'enchère : <span th:text="${#dates.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
-                              <p>Vendeur : <span th:text="${article.idUtilisateur}"></span></p>
+                              <div class="row">
+                                  <div class="col-md-4">
+                                      <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid">
+                                  </div>
+                                  <div class="col-md-8">
+                                      <p>Prix : <span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente}"></span> point(s)</p>
+                                      <p>Fin de l'enchère : <span th:text="${article.dateFinEncheres}"></span></p>
+                                      <p>Vendeur : <a href="" th:text="${article.idUtilisateur}"></a></p>
+                                  </div>
+                              </div>
                           </div>
                       </div>
                   </div>
