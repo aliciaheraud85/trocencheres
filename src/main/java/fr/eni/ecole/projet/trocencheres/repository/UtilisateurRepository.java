@@ -44,4 +44,9 @@ public class UtilisateurRepository {
     public List<Utilisateur> findAll() {
         return jdbc.query("select * from UTILISATEURS", MAPPER);
     }
+
+    public int updateUtilisateur(Utilisateur u) {
+        return jdbc.update("update UTILISATEURS set nom = ?, prenom = ?, email = ?, telephone = ?, mot_de_passe = ?, no_adresse = ? where pseudo = ?",
+                u.getNom(), u.getPrenom(), u.getEmail(), u.getTelephone(), u.getMotDePasse(), u.getNoAdresse(), u.getPseudo());
+    }
 }

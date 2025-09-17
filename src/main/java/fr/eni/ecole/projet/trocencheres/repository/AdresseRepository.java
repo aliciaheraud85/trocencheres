@@ -40,4 +40,9 @@ public class AdresseRepository {
     public List<Adresse> findAll() {
         return jdbc.query("select * from ADRESSES", MAPPER);
     }
+
+    public int updateAdresse(Adresse a) {
+        return jdbc.update("update ADRESSES set rue = ?, code_postal = ?, ville = ? where no_adresse = ?",
+                a.getRue(), a.getCodePostal(), a.getVille(), a.getNoAdresse());
+    }
 }
