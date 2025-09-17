@@ -27,7 +27,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-//        System.out.println("AuthTokenFilter called for URI: " + request.getRequestURI());
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtService.validateJwtToken(jwt)) {
@@ -52,6 +51,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        return jwtService.getJwtFromHeader(request);
+        return jwtService.getJwtFromCookie(request);
     }
 }

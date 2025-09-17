@@ -4,11 +4,14 @@ import fr.eni.ecole.projet.trocencheres.security.jwt.JWTService;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginResponse;
 import fr.eni.ecole.projet.trocencheres.service.UtilisateurService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.SameSiteCookies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,25 +28,38 @@ public class AuthController {
     @Autowired
     UtilisateurService utilisateurService;
 
+    @Value("${spring.security.jwtExpirationMs}")
+    private int jwtExpirationMs;
+
     @GetMapping("/login")
     public String getLoginForm(LoginRequest loginRequest) {
         return "login";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@Valid LoginRequest loginRequest, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> authenticate(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpServletResponse response) throws Exception {
 
         Authentication auth;
         try {
             auth = utilisateurService.validate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Authentication failed: " + e.getMessage());
         }
-        LoginResponse response = utilisateurService.createLoginResponse(auth, jwtService);
-        System.out.println("token: " + response.getJwtToken());
-        return ResponseEntity.ok(response);
+
+        LoginResponse loginResponse = utilisateurService.createLoginResponse(auth, jwtService);
+
+        ResponseCookie cookie = ResponseCookie.from("jwt_auth", loginResponse.getJwtToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(jwtExpirationMs / 1000)
+                .sameSite(SameSiteCookies.STRICT.toString())
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.setHeader("Location", "/");
+
+        return ResponseEntity.ok(loginResponse);
     }
 
 }

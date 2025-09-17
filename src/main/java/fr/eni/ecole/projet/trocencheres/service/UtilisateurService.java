@@ -23,15 +23,14 @@ public class UtilisateurService {
     private AuthenticationManager authManager;
 
     public Authentication validate(UsernamePasswordAuthenticationToken token) {
-        String actualPassword = utilisateurRepository.getPasswordByPseudo(token.getName());
+        String actualPassword = utilisateurRepository.findByPseudo(token.getName()).get().getMotDePasse();
         return authManager.authenticate(new UsernamePasswordAuthenticationToken(token.getName(), token.getCredentials()));
     }
 
     public LoginResponse createLoginResponse(Authentication auth, JWTService service) {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        UserDetails user = (UserDetails) auth.getPrincipal();
-        String jwtToken = service.generateTokenFromUsername(user.getUsername());
-        List<String> roles = user.getAuthorities().stream().map(item -> item.getAuthority()).toList();
-        return new LoginResponse(user.getUsername(), roles, jwtToken);
+        String jwtToken = service.generateTokenFromUsername(auth.getPrincipal().toString());
+        List<String> roles = auth.getAuthorities().stream().map(item -> item.getAuthority()).toList();
+        return new LoginResponse(auth.getPrincipal().toString(), roles, jwtToken);
     }
 }
