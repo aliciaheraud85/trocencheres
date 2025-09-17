@@ -1,16 +1,16 @@
 package fr.eni.ecole.projet.trocencheres.service;
 
-import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import fr.eni.ecole.projet.trocencheres.repository.UtilisateurRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-public class UserService {
-
+@Service
+public class UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
 
-    public UserService(UtilisateurRepository utilisateurRepository) {
+    public UtilisateurService(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;
     }
 

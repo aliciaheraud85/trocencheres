@@ -1,30 +1,30 @@
 package fr.eni.ecole.projet.trocencheres.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+
 @EnableWebSecurity
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
-//    private final CustomUserDetailsService userDetailsService;
-//
-//    public SecurityConfig(CustomUserDetailsService userDetailsService) {
-//        this.userDetailsService = userDetailsService;
-//    }
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,21 +53,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    InMemoryUserDetailsManager userDetailsManager() {
-        String pwd_chiffre = passwordEncoder().encode("password");
-        UserDetails user = User.builder().username("flemerrer").password(pwd_chiffre)
-                .roles("ADMIN").build();
-        return new InMemoryUserDetailsManager(user);
+    public CustomUserDetailsService userDetailsService() {
+        return userDetailsService;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-//         Supports prefixes like {bcrypt} stored in DB
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider(userDetailsService());
+        authenticationManagerBuilder.authenticationProvider(authProvider);
+        return authenticationManagerBuilder.build();
+    }
 }

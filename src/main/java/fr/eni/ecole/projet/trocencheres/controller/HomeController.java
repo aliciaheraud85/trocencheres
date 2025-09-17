@@ -1,5 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ public class HomeController {
     public String index(){
         return "index";
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello")
     public String helloWorld(){
         return "hello";
