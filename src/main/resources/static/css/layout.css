@@ -7,19 +7,22 @@ h1{
     padding-top: 50px;
 }
 
-/* Fait en sorte que le body et html prennent 100% de la hauteur */
 html, body {
     height: 100%;
     margin: 0;
 }
 
-/* Ton conteneur principal doit devenir un flex container vertical */
+
 body {
     display: flex;
     flex-direction: column;
 }
 
-/* Le contenu principal doit occuper tout l'espace restant */
 main {
     flex: 1;
+}
+
+a{
+    text-decoration: none;
+    color: black;
 }
