@@ -19,10 +19,10 @@
                 </div>
                 <h1>Login</h1>
                 <form id="login-form" th:action="@{/login}" th:object="${loginRequest}" method="post">
-                    <label class="grid-2" for="inputUsername" th:field="*{username}"> Username</label>
-                    <input class="grid-2" id="inputUsername" type="text" name="username" required/>
-                    <label class="grid-2" for="inputPassword" th:field="*{password}"> Password</label>
-                    <input class="grid-2" id="inputPassword" type="password" name="password" required/>
+                    <label class="grid-2" for="inputUsername"> Username</label>
+                    <input class="grid-2" id="inputUsername" type="text" name="username" th:field="*{username}" required/>
+                    <label class="grid-2" for="inputPassword"> Password</label>
+                    <input class="grid-2" id="inputPassword" type="password" name="password" th:field="*{password}" required/>
                     <input class="grid-2" type="submit" value="Sign In"/>
                 </form>
             </div>

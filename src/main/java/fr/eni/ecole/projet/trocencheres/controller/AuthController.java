@@ -1,5 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
+import ch.qos.logback.core.model.Model;
+import fr.eni.ecole.projet.trocencheres.dto.SignUpRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.JWTService;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginResponse;
@@ -15,8 +17,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.security.core.Authentication;
+
+import javax.naming.Binding;
 
 @Controller
 public class AuthController {
@@ -29,6 +34,20 @@ public class AuthController {
 
     @Value("${spring.security.jwtExpirationMs}")
     private int jwtExpirationMs;
+
+    @GetMapping("/register")
+    public String getRegisterForm(SignUpRequest signUpRequest) {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute SignUpRequest signUpRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        utilisateurService.createUser(signUpRequest);
+        return "login";
+    }
 
     @GetMapping("/login")
     public String getLoginForm(LoginRequest loginRequest) {
