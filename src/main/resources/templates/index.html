@@ -2,9 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
       data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
 					contentPage=~{:: .center-main})}">
+
+
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
+    <link rel="stylesheet" data-th-href="@{/css/general.css}">
 </head>
 <body>
 <main class="center-main">
@@ -16,6 +19,72 @@
         </div>
     </div>
 </main>
+
+  <main class="center-main">
+      <div class="container-fluid">
+          <div class="container">
+              <div class="row mt-3">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4 text-center mt-2">
+                      <h1>Liste des enchères</h1>
+                  </div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
+                      <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
+                      <!-- Change to display user name when logged in -->
+                      <p>Participant : Username</p>
+                  </div>
+              </div>
+              <div class="row p-2">
+                  <div class="col-md-12"><h5>Filtres :</h5></div>
+                <div class="col-md-4 ">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                        <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+                    </form>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+              </div>
+              <div class="row p-2 mb-5">
+                  <div class="col-md-4">
+                      <select class="form-select" aria-label="Default select example" name="selectCategory">
+                          <option selected>Toutes</option>
+                          <div th:each="categorie : ${categories}">
+                              <option value="1" th:text="${categorie.libelle}"></option>
+                          </div>
+                    </select>
+                  </div>
+                  <div class="col-md-4"><button class="btn btn-outline-secondary" type="submit">Annuler</button></div>
+                  <div class="col-md-4"></div>
+              </div>
+
+
+              <div class="row mb-3">
+                  <div class="col-md-4" th:each="article : ${articles}">
+                      <div class="card mb-3">
+                          <div class="card-header text-center">
+                              <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>
+                          </div>
+                          <div class="card-body">
+                              <div class="row">
+                                  <div class="col-md-4">
+                                      <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid">
+                                  </div>
+                                  <div class="col-md-8">
+                                      <p>Prix : <span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente}"></span> point(s)</p>
+                                      <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
+                                      <p>Vendeur : <a href="" th:text="${article.idUtilisateur}"></a></p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
 
 </body>
 </html>
