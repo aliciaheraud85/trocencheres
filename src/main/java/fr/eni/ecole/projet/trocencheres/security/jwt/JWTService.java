@@ -23,19 +23,30 @@ import java.util.Date;
 @Service
 public class JWTService {
 
-//    TODO: add logging (slf4j or eq)
+// FIXME: add logging (slf4j or eq)
 
     private final String secretKey;
 
     @Value("${spring.security.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    @Value("${spring.application.state}")
+    private String appState;
+
+    @Value("${spring.security.overrideSecretKey}")
+    private String overrideSecretKey;
+
     public JWTService() {
-        try {
-            SecretKey key = KeyGenerator.getInstance("HmacSHA256").generateKey();
-            secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        if (this.appState != "dev" || this.appState == null) {
+            try {
+                SecretKey key = KeyGenerator.getInstance("HmacSHA256").generateKey();
+                secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            this.secretKey = overrideSecretKey;
+            System.out.println(secretKey);
         }
     }
 
@@ -43,6 +54,7 @@ public class JWTService {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && Arrays.stream(cookies).anyMatch(cookie -> cookie.getName().equals("jwt_auth"))) {
             String jwt = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("jwt_auth")).findFirst().get().getValue();
+            System.out.println("jwt token reads: " + jwt);
             return jwt;
         }
         return null;
