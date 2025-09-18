@@ -1,6 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -24,10 +23,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model){
-        LocalDate localDate = LocalDate.now();
-        String formattedDate = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        model.addAttribute("currentDateFormatted", formattedDate);
-
         List<ArticleAVendre> lstArticles = articleAVendreService.getAuctionList();
         model.addAttribute("articles", lstArticles);
 
@@ -46,7 +41,11 @@ public class HomeController {
         if(id > 0){
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
             if(articleById != null) {
+                Categorie categorie = articleAVendreService.getCategorieForArticle(id);
+                Adresse adresse = articleAVendreService.getAdresseForArticle(id);
                 model.addAttribute("article", articleById);
+                model.addAttribute("categorie", categorie);
+                model.addAttribute("adresse", adresse);
                 return "auction-details";
             }else {
                 System.out.println("This article does not exist");

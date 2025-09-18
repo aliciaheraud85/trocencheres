@@ -6,3 +6,7 @@ a {
 .dateUser{
     border: 1px solid black;
 }
+
+.dateUser p{
+    font-size: 0.9em;
+}

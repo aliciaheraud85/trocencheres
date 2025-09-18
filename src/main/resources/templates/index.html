@@ -3,10 +3,11 @@
       data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
 					contentPage=~{:: .center-main})}">
 
-<link rel="stylesheet" data-th-href="@{/css/general.css}">
+
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
+    <link rel="stylesheet" data-th-href="@{/css/general.css}">
 </head>
 <body>
 <main class="center-main">
@@ -21,6 +22,7 @@
 
   <main class="center-main">
       <div class="container-fluid">
+          <div class="container">
               <div class="row mt-3">
                   <div class="col-md-2"></div>
                   <div class="col-md-2"></div>
@@ -29,7 +31,7 @@
                   </div>
                   <div class="col-md-2"></div>
                   <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
-                      <p>Date du jour : <span th:text="${currentDateFormatted}"></span></p>
+                      <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
                       <!-- Change to display user name when logged in -->
                       <p>Participant : Username</p>
                   </div>
@@ -72,7 +74,7 @@
                                   </div>
                                   <div class="col-md-8">
                                       <p>Prix : <span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente}"></span> point(s)</p>
-                                      <p>Fin de l'enchère : <span th:text="${article.dateFinEncheres}"></span></p>
+                                      <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
                                       <p>Vendeur : <a href="" th:text="${article.idUtilisateur}"></a></p>
                                   </div>
                               </div>
@@ -80,6 +82,7 @@
                       </div>
                   </div>
               </div>
+          </div>
       </div>
   </main>
 
