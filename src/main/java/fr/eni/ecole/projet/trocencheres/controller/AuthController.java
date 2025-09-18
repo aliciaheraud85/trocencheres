@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -37,13 +36,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpServletResponse response) throws Exception {
+    public String authenticate(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpServletResponse response) throws Exception {
 
         Authentication auth;
         try {
             auth = utilisateurService.validate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Authentication failed: " + e.getMessage());
+            return "redirect:/login?error";
         }
 
         LoginResponse loginResponse = utilisateurService.createLoginResponse(auth, jwtService);
@@ -58,8 +57,7 @@ public class AuthController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setHeader("Location", "/");
-
-        return ResponseEntity.ok(loginResponse);
+        return "redirect:/";
     }
 
 }

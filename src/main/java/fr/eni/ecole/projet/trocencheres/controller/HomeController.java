@@ -10,7 +10,6 @@ public class HomeController {
     public String index(){
         return "index";
     }
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello")
     public String helloWorld(){
         return "hello";

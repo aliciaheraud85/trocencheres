@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.lang.reflect.Array;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -46,7 +45,6 @@ public class JWTService {
             }
         } else {
             this.secretKey = overrideSecretKey;
-            System.out.println(secretKey);
         }
     }
 
@@ -54,7 +52,6 @@ public class JWTService {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && Arrays.stream(cookies).anyMatch(cookie -> cookie.getName().equals("jwt_auth"))) {
             String jwt = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("jwt_auth")).findFirst().get().getValue();
-            System.out.println("jwt token reads: " + jwt);
             return jwt;
         }
         return null;
