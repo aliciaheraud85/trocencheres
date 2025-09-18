@@ -45,8 +45,11 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        utilisateurService.createUser(signUpRequest);
-        return "login";
+        int id = utilisateurService.createUser(signUpRequest);
+        if (id > 0) {
+            return "login";
+        }
+        return "redirect:register?error";
     }
 
     @GetMapping("/login")

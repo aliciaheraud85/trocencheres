@@ -1,10 +1,10 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +23,6 @@ public class AdresseRepository {
         @Override
         public Adresse mapRow(ResultSet rs, int rowNum) throws SQLException {
             Adresse a = new Adresse();
-            a.setNoAdresse(rs.getInt("no_adresse"));
             a.setRue(rs.getString("rue"));
             a.setCodePostal(rs.getString("code_postal"));
             a.setVille(rs.getString("ville"));
@@ -39,5 +38,10 @@ public class AdresseRepository {
 
     public List<Adresse> findAll() {
         return jdbc.query("select * from ADRESSES", MAPPER);
+    }
+
+    public int addAddress(Adresse address) {
+        String queryString = "INSERT INTO ADRESSES(rue, code_postal, ville, adresse_eni) VALUES(?, ?, ?, ?)";
+        return jdbc.update(queryString, address.getRue(), address.getCodePostal(), address.getVille(), address.isAdresseEni());
     }
 }

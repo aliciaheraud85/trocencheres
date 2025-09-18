@@ -1,5 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
+import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,4 +45,10 @@ public class UtilisateurRepository {
     public List<Utilisateur> findAll() {
         return jdbc.query("select * from UTILISATEURS", MAPPER);
     }
+
+    public int addUser(Utilisateur user) {
+        String queryString = "INSERT INTO UTILISATEURS(pseudo, nom, prenom, email, telephone, mot_de_passe, credit, administrateur, no_adresse) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return jdbc.update(queryString, user.getPseudo(), user.getNom(), user.getPrenom(), user.getEmail(), user.getTelephone(), user.getMotDePasse(), user.getCredit(), user.isAdministrateur(), user.getNoAdresse());
+    }
+
 }
