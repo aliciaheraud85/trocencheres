@@ -18,7 +18,7 @@
                     You have been logged out.
                 </div>
                 <h1>Login</h1>
-                <form id="login-form" th:action="@{/login}" th:object="${loginRequest}" method="post">
+                <form id="login-form" class="user-form" th:action="@{/login}" th:object="${loginRequest}" method="post">
                     <label class="grid-2" for="inputUsername"> Username</label>
                     <input class="grid-2" id="inputUsername" type="text" name="username" th:field="*{username}" required/>
                     <label class="grid-2" for="inputPassword"> Password</label>

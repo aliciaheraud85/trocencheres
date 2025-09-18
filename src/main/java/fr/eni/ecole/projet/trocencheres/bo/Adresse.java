@@ -1,5 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.bo;
 
+import org.springframework.dao.DuplicateKeyException;
+
 public class Adresse {
     private String rue;
     private String codePostal;
@@ -37,7 +39,7 @@ public class Adresse {
     }
 
     @Override
-    public String toString() {
+    public String toString() throws DuplicateKeyException {
         return "Adresse{" +
                ", rue='" + rue + '\'' +
                ", codePostal='" + codePostal + '\'' +

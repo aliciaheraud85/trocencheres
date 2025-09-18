@@ -24,10 +24,8 @@ public class SignUpRequest {
     private final String city;
     @NotBlank(message = "Password is required")
     private final String password;
-    private final String confirmation;
 
-
-    public SignUpRequest(String username, String lastName, String firstName, String email, String phoneNumber, String street, String postalCode, String city, String password, String confirmation) {
+    public SignUpRequest(String username, String lastName, String firstName, String email, String phoneNumber, String street, String postalCode, String city, String password) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -37,13 +35,7 @@ public class SignUpRequest {
         this.postalCode = postalCode;
         this.city = city;
         this.password = password;
-        this.confirmation = confirmation;
     }
-
-    @AssertTrue(message = "Passwords must be identical")
-    private boolean isPasswordConfirmed() {
-        return getConfirmation().equals(getPassword());
-    };
 
     public String getUsername() {
         return username;
@@ -79,9 +71,5 @@ public class SignUpRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getConfirmation() {
-        return confirmation;
     }
 }

@@ -11,6 +11,7 @@ import fr.eni.ecole.projet.trocencheres.security.jwt.LoginResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +53,7 @@ public class UtilisateurService {
         return new LoginResponse(auth.getPrincipal().toString(), roles, jwtToken);
     }
 
-    public int createUser(SignUpRequest signUpRequest) {
+    public int createUser(SignUpRequest signUpRequest) throws DuplicateKeyException {
         Adresse address = new Adresse(signUpRequest.getStreet(), signUpRequest.getPostalCode(), signUpRequest.getCity(), false);
         int addressId = adresseRepository.addAddress(address);
         String hashedPassword = getEncoder().encode(signUpRequest.getPassword());

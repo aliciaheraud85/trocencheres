@@ -1,4 +1,4 @@
-#login-form {
+.user-form {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
@@ -6,6 +6,13 @@
     margin: .5rem
     }
 
+}
+
+#register-form {
+    label {
+        visibility: hidden;
+        height: 0;
+    }
 }
 
 .grid-2 {

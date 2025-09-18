@@ -1,6 +1,5 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
-import ch.qos.logback.core.model.Model;
 import fr.eni.ecole.projet.trocencheres.dto.SignUpRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.JWTService;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginRequest;
@@ -11,6 +10,7 @@ import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.SameSiteCookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.security.core.Authentication;
-
-import javax.naming.Binding;
 
 @Controller
 public class AuthController {
@@ -45,11 +43,15 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        int id = utilisateurService.createUser(signUpRequest);
-        if (id > 0) {
-            return "login";
+        try {
+            int id = utilisateurService.createUser(signUpRequest);
+        } catch (DuplicateKeyException e) {
+            return "redirect:register?error";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "redirect:register?error";
         }
-        return "redirect:register?error";
+        return "redirect:/";
     }
 
     @GetMapping("/login")
