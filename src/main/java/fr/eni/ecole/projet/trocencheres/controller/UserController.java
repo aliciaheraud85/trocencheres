@@ -3,6 +3,7 @@ package fr.eni.ecole.projet.trocencheres.controller;
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
+import java.security.Principal;
 import fr.eni.ecole.projet.trocencheres.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,17 +21,20 @@ public class UserController {
     }
 
     @GetMapping("/user/profile")
-    public String profile(Authentication authentication, Model model) {
-        // FRANCOIS : implemente ta méthode pour récupérer l'utilisateur authentifié
-        String username = authentication.getName();
-        UserProfile profile = userService.getUserProfile(username);
+    public String profile(Principal principal, Model model) {
+        String username = principal != null ? principal.getName() : null;
+        UserProfile profile = null;
+        if (username != null) {
+            profile = userService.getUserProfile(username);
+        }
         model.addAttribute("profile", profile);
         return "user/profile";
     }
 
     @GetMapping("/user/profile/edit")
-    public String editProfile(Authentication authentication, Model model) {
-        String username = authentication.getName();
+    public String editProfile(Principal principal, Model model) {
+        String username = principal != null ? principal.getName() : null;
+        if (username == null) return "redirect:/login";
         UserProfile profile = userService.getUserProfile(username);
         if (profile.getUtilisateur() == null) profile.setUtilisateur(new Utilisateur());
         if (profile.getAdresse() == null) profile.setAdresse(new Adresse());
@@ -39,19 +43,24 @@ public class UserController {
     }
 
     @PostMapping("/user/profile/save")
-    public String saveProfile(@ModelAttribute("profile") UserProfile profile, Authentication authentication) {
+    public String saveProfile(@ModelAttribute("profile") UserProfile profile, Principal principal) {
+        String username = principal != null ? principal.getName() : null;
+        if (username == null) return "redirect:/login";
+
         // ensure pseudo equals authenticated user
-        String username = authentication.getName();
+        if (profile.getUtilisateur() == null) {
+            profile.setUtilisateur(new Utilisateur());
+        }
         profile.getUtilisateur().setPseudo(username);
-        // set address id if existing
+
+        // set address id if missing, preserve existing if necessary
         if (profile.getAdresse() != null && profile.getAdresse().getNoAdresse() == 0) {
-            // if no adresse id provided, keep existing one
-            // load existing
             UserProfile existing = userService.getUserProfile(username);
             if (existing.getAdresse() != null) profile.getAdresse().setNoAdresse(existing.getAdresse().getNoAdresse());
         }
 
-        userService.updateUserProfile(profile.getUtilisateur(), profile.getAdresse());
-        return "redirect:/user/profile";
+        boolean updated = userService.updateUserProfile(profile.getUtilisateur(), profile.getAdresse());
+        if (updated) return "redirect:/user/profile";
+        return "redirect:/user/profile/edit";
     }
 }

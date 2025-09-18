@@ -9,6 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 @Repository
 public class AdresseRepository {
@@ -44,5 +48,26 @@ public class AdresseRepository {
     public int updateAdresse(Adresse a) {
         return jdbc.update("update ADRESSES set rue = ?, code_postal = ?, ville = ? where no_adresse = ?",
                 a.getRue(), a.getCodePostal(), a.getVille(), a.getNoAdresse());
+    }
+
+    public int insertAdresse(Adresse a) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into ADRESSES (rue, code_postal, ville, adresse_eni) values (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, a.getRue());
+            ps.setString(2, a.getCodePostal());
+            ps.setString(3, a.getVille());
+            ps.setBoolean(4, a.isAdresseEni());
+            return ps;
+        }, keyHolder);
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            int id = key.intValue();
+            a.setNoAdresse(id);
+            return id;
+        }
+        return 0;
     }
 }
