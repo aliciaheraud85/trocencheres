@@ -37,6 +37,11 @@ public class HomeController {
         return "hello";
     }
 
+    @GetMapping("/forbidden")
+    public String forbidden(){
+        return "forbidden";
+    }
+
     @GetMapping("/auction-details")
     public String auctionDetails(int id, Model model){
         if(id > 0){

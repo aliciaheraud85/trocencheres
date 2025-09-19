@@ -39,6 +39,12 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 )
+                .logout((logout) -> logout
+                        .logoutSuccessUrl("/")
+                        .deleteCookies("jwt_auth", "JSESSIONID")
+                        .clearAuthentication(true)
+                        .permitAll()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
