@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class EnchereRepository {
@@ -38,5 +36,10 @@ public class EnchereRepository {
 
     public List<Enchere> findAll() {
         return jdbc.query("select * from ENCHERES", MAPPER);
+    }
+
+    public int createEnchere(Enchere bid) {
+        String queryString = "INSERT INTO ENCHERES(id_utilisateur, no_article, montant_enchere, date_enchere) VALUES (?, ?, ?, ?)";
+        return jdbc.update(queryString, bid.getIdUtilisateur(), bid.getNoArticle(), bid.getMontantEnchere(), bid.getDateEnchere());
     }
 }

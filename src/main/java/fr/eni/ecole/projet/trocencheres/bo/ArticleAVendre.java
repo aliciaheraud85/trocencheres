@@ -15,6 +15,7 @@ public class ArticleAVendre {
     private String idUtilisateur;
     private int noCategorie;
     private int noAdresseRetrait;
+    private Enchere enchere;
 
     public ArticleAVendre() {}
 

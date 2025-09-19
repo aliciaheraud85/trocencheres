@@ -1,25 +1,22 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
-import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.bo.*;
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
+import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
+import fr.eni.ecole.projet.trocencheres.repository.EnchereRepository;
 import fr.eni.ecole.projet.trocencheres.service.UserService;
+import fr.eni.ecole.projet.trocencheres.service.UtilisateurService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.User;
-import org.springframework.security.access.prepost.PreAuthorize;
-import fr.eni.ecole.projet.trocencheres.bo.Adresse;
-import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.*;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -27,10 +24,16 @@ public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
     private final UserService userService;
+    private final UtilisateurService utilisateurService;
+    private final EnchereRepository enchereRepository;
+    private final ArticleAVendreRepository articleAVendreRepository;
 
-    public HomeController(ArticleAVendreService articleAVendreService, UserService userService) {
+    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService, EnchereRepository enchereRepository, ArticleAVendreRepository articleAVendreRepository) {
         this.articleAVendreService = articleAVendreService;
+        this.utilisateurService = utilisateurService;
         this.userService = userService;
+        this.enchereRepository = enchereRepository;
+        this.articleAVendreRepository = articleAVendreRepository;
     }
 
     @GetMapping("/")
@@ -101,6 +104,25 @@ public class HomeController {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @GetMapping("/bid")
+    public String bid(int id, int amount, Principal principal){
+        String status = "";
+        ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
+        Utilisateur user = userService.getUserProfile(principal.getName()).getUtilisateur();
+        if (user.getCredit() > article.getPrixVente() && article.getStatutEnchere() == 1) {
+            article.setPrixVente(amount);
+            Enchere bid = new Enchere(user.getPseudo(), id, amount, LocalDateTime.now());
+//            TODO: remplacer les appels au repo par le service & déplacer la logique métier ici dans le service
+            int bidId = enchereRepository.createEnchere(bid);
+//            TODO: ajouter la notion d'enchere dans l'objet ArticleAVendre ; ajouter le moyen de récupérer la dernière enchère (par montant de l'enchère ?) pour pouvoir retrouver l'utilisateur qui a remporté l'enchère
+            int rowIsUpdated = articleAVendreRepository.updatePrixVente(article);
+            if (bidId != 0 && rowIsUpdated != 0) {
+                return "redirect:/auction-details?id=" + id +"&status=" + status;
+            }
+        }
+        return "redirect:/auction-details?error";
     }
 
     @GetMapping("/add-sale")

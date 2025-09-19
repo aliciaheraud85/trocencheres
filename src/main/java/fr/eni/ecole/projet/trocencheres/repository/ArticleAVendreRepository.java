@@ -97,6 +97,11 @@ public class ArticleAVendreRepository {
         return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ?", MAPPER, categoryId);
     }
 
+    public int updatePrixVente(ArticleAVendre article) {
+        String queryString = "update ARTICLES_A_VENDRE set prix_vente = ? where no_article = ?";
+        return jdbc.update(queryString, article.getPrixVente() , article.getNoArticle());
+    }
+
     public List<ArticleAVendre> findByCategoryAndName(int categoryId, String namePattern) {
         return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ? and nom_article like ?", MAPPER, categoryId, namePattern);
     }
