@@ -3,6 +3,7 @@ package fr.eni.ecole.projet.trocencheres.bo;
 import org.springframework.dao.DuplicateKeyException;
 
 public class Adresse {
+    public int noAdresse;
     private String rue;
     private String codePostal;
     private String ville;
@@ -26,6 +27,8 @@ public class Adresse {
     public void setVille(String ville) { this.ville = ville; }
     public boolean isAdresseEni() { return adresseEni; }
     public void setAdresseEni(boolean adresseEni) { this.adresseEni = adresseEni; }
+    public int getNoAdresse() {return noAdresse;}
+    public void setNoAdresse(int noAdresse) {this.noAdresse = noAdresse;}
 
     @Override
     public boolean equals(Object obj) {

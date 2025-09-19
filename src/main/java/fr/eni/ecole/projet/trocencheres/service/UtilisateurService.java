@@ -55,7 +55,7 @@ public class UtilisateurService {
 
     public int createUser(SignUpRequest signUpRequest) throws DuplicateKeyException {
         Adresse address = new Adresse(signUpRequest.getStreet(), signUpRequest.getPostalCode(), signUpRequest.getCity(), false);
-        int addressId = adresseRepository.addAddress(address);
+        int addressId = adresseRepository.insertAdresse(address);
         String hashedPassword = getEncoder().encode(signUpRequest.getPassword());
         Utilisateur user = new Utilisateur(signUpRequest.getUsername(), signUpRequest.getLastName(), signUpRequest.getFirstName(), signUpRequest.getEmail(), signUpRequest.getPhoneNumber(), hashedPassword, 10, false, addressId);
         return utilisateurRepository.addUser(user);

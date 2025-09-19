@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +27,10 @@ import org.springframework.security.core.Authentication;
 public class AuthController {
 
     @Autowired
-    JWTService jwtService;
+    private JWTService jwtService;
 
     @Autowired
-    UtilisateurService utilisateurService;
+    private UtilisateurService utilisateurService;
 
     @Value("${spring.security.jwtExpirationMs}")
     private int jwtExpirationMs;
@@ -56,11 +58,14 @@ public class AuthController {
 
     @GetMapping("/login")
     public String getLoginForm(LoginRequest loginRequest) {
+        if (isAuthenticated()) {
+            return "redirect:/";
+        }
         return "login";
     }
 
     @PostMapping("/login")
-    public String authenticate(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpServletResponse response) throws Exception {
+    public String authenticate(@Valid LoginRequest loginRequest, HttpServletResponse response) {
 
         Authentication auth;
         try {
@@ -82,6 +87,15 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setHeader("Location", "/");
         return "redirect:/";
+    }
+
+    private boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
     }
 
 }

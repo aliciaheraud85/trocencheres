@@ -51,4 +51,8 @@ public class UtilisateurRepository {
         return jdbc.update(queryString, user.getPseudo(), user.getNom(), user.getPrenom(), user.getEmail(), user.getTelephone(), user.getMotDePasse(), user.getCredit(), user.isAdministrateur(), user.getNoAdresse());
     }
 
+    public int updateUtilisateur(Utilisateur u) {
+        return jdbc.update("update UTILISATEURS set nom = ?, prenom = ?, email = ?, telephone = ?, mot_de_passe = ?, no_adresse = ? where pseudo = ?",
+                u.getNom(), u.getPrenom(), u.getEmail(), u.getTelephone(), u.getMotDePasse(), u.getNoAdresse(), u.getPseudo());
+    }
 }
