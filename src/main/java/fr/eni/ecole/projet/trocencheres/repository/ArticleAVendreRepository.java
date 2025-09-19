@@ -2,11 +2,16 @@ package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +64,33 @@ public class ArticleAVendreRepository {
         return jdbc.query("select * from ARTICLES_A_VENDRE", MAPPER);
     }
 
+    public long createArticleAVendre(ArticleAVendre a) {
+        String sql = "INSERT INTO ARTICLES_A_VENDRE " +
+                "(nom_article, description, date_debut_encheres, datee_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, a.getNomArticle());
+            ps.setString(2, a.getDescription());
+            ps.setObject(3, a.getDateDebutEncheres() != null ? java.sql.Date.valueOf(a.getDateDebutEncheres()) : null);
+            ps.setObject(4, a.getDateFinEncheres() != null ? java.sql.Date.valueOf(a.getDateFinEncheres()) : null);
+            ps.setInt(5, a.getStatutEnchere());
+            ps.setInt(6, a.getPrixInitial());
+            ps.setInt(7, a.getPrixVente());
+            ps.setString(8, a.getIdUtilisateur());
+            ps.setInt(8, a.getNoCategorie());
+            ps.setInt(9, a.getNoAdresseRetrait());
+
+            return ps;
+
+        }, keyHolder);
+
+        Number generatedId =  keyHolder.getKey();
+        return generatedId != null ? generatedId.intValue() : -1;
+    }
 
     public List<ArticleAVendre> findByCategory(int categoryId) {
         return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ?", MAPPER, categoryId);
