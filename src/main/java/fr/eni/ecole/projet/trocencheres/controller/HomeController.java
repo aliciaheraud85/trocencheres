@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
 import org.springframework.stereotype.Controller;
+import java.security.Principal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,36 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index(@RequestParam(value = "categoryId", required = false) Integer categoryId, Model model){
-        List<ArticleAVendre> lstArticles = articleAVendreService.getAuctionList(categoryId);
+    public String index(@RequestParam(value = "categoryId", required = false) Integer categoryId,
+                        @RequestParam(value = "q", required = false) String q,
+                        @RequestParam(value = "view", required = false) String view,
+                        @RequestParam(value = "status", required = false) Integer status,
+                        Principal principal,
+                        Model model){
+
+        List<ArticleAVendre> lstArticles;
+        String username = principal != null ? principal.getName() : null;
+
+        if (username != null && view != null) {
+            switch (view) {
+                case "participating":
+                    lstArticles = articleAVendreService.getAuctionsForParticipant(username);
+                    break;
+                case "won":
+                    lstArticles = articleAVendreService.getAuctionsWonByUser(username);
+                    break;
+                case "mySales":
+                    // status may be null (all), or 0/1/2
+                    lstArticles = articleAVendreService.getAuctionsForSeller(username, status);
+                    break;
+                default:
+                    // fallback to general search with category + name
+                    lstArticles = articleAVendreService.getAuctionList(categoryId, q);
+            }
+        } else {
+            // not authenticated or no special view param: regular public list
+            lstArticles = articleAVendreService.getAuctionList(categoryId, q);
+        }
         model.addAttribute("articles", lstArticles);
 
         List<Categorie> lstCategories = articleAVendreService.getCategoriesList();

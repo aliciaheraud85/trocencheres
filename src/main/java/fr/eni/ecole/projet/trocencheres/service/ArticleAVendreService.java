@@ -34,6 +34,29 @@ public class ArticleAVendreService {
         return articleRepository.findByCategory(categoryId);
     }
 
+    public List<ArticleAVendre> getAuctionList(Integer categoryId, String nameQuery){
+        String pattern = nameQuery == null || nameQuery.isBlank() ? null : ("%" + nameQuery + "%");
+        if (categoryId == null) {
+            if (pattern == null) return getAuctionList();
+            return articleRepository.findByName(pattern);
+        } else {
+            if (pattern == null) return articleRepository.findByCategory(categoryId);
+            return articleRepository.findByCategoryAndName(categoryId, pattern);
+        }
+    }
+
+    public List<ArticleAVendre> getAuctionsForParticipant(String username){
+        return articleRepository.findByParticipant(username);
+    }
+
+    public List<ArticleAVendre> getAuctionsWonByUser(String username){
+        return articleRepository.findWonByUser(username);
+    }
+
+    public List<ArticleAVendre> getAuctionsForSeller(String sellerId, Integer statutEnchere){
+        return articleRepository.findBySellerAndStatus(sellerId, statutEnchere);
+    }
+
     public List<Categorie> getCategoriesList(){
         return categorieRepository.findAll();
     }
