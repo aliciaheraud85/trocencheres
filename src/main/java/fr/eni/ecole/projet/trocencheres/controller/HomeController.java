@@ -7,10 +7,10 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 @Controller
@@ -90,6 +90,15 @@ public class HomeController {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @GetMapping("/add-sale")
+    public String addSale(Model  model){
+        List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
+        model.addAttribute("categories", lstCategories);
+        List<Adresse> lstAdresse = articleAVendreService.getAdresseList();
+        model.addAttribute("adresse", lstAdresse);
+        return "add-sale";
     }
 
 

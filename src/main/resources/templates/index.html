@@ -11,15 +11,6 @@
 </head>
 <body>
   <main class="center-main">
-      <div class="container text-center">
-          <div class="row align-items-end">
-              <div class="col-md-12">
-                  <h1>Page d'accueil</h1>
-              </div>
-          </div>
-      </div>
-  </main>
-  <main class="center-main">
       <div class="container-fluid">
           <div class="container">
               <div class="row mt-3">
@@ -64,6 +55,12 @@
                           </select>
                           <input type="hidden" name="q" th:value="${param.q}" />
                       </form>
+                      <select class="form-select" aria-label="Default select example" name="selectCategory">
+                          <option selected>Toutes</option>
+                          <div th:each="categorie : ${categories}">
+                              <option value="1" th:text="${categorie.libelle}"></option>
+                          </div>
+                      </select>
                   </div>
                   <div class="col-md-4"><button class="btn btn-outline-secondary" type="submit">Annuler</button></div>
                   <div class="col-md-4"></div>

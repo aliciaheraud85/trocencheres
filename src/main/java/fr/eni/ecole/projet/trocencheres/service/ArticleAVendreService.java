@@ -61,6 +61,10 @@ public class ArticleAVendreService {
         return categorieRepository.findAll();
     }
 
+    public List<Adresse> getAdresseList(){
+        return adresseRepository.findAll();
+    }
+
     public ArticleAVendre getArticleAVendre(int id){
         return articleRepository.findById(id).orElse(null);
     }
@@ -83,5 +87,4 @@ public class ArticleAVendreService {
             return null;
         }
     }
-
 }
