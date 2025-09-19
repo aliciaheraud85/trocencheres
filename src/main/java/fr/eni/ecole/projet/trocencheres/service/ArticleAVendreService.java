@@ -100,6 +100,11 @@ public class ArticleAVendreService {
         }
     }
 
+    public void updateArticlePrice(ArticleAVendre article, int amount) throws SQLException {
+        article.setPrixVente(amount);
+        updateArticle(article);
+    }
+
     public int createArticle(ArticleAVendre article, String username){
         article.setIdUtilisateur(username);
         article.setStatutEnchere(0);

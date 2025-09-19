@@ -8,6 +8,7 @@ import fr.eni.ecole.projet.trocencheres.repository.UtilisateurRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
@@ -85,4 +86,13 @@ public class UserService {
 
         return (addrUpdated > 0 || userUpdated > 0);
     }
+
+    public void debitBidder(Utilisateur bidder, int amount) throws SQLException {
+        bidder.setCredit(bidder.getCredit() - amount);
+        int success = utilisateurRepository.updateCredit(bidder);
+        if (success == 0) {
+            throw new SQLException("database enchere insert failed");
+        }
+    }
+
 }

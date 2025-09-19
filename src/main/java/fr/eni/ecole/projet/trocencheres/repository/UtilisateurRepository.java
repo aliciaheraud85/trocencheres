@@ -57,6 +57,11 @@ public class UtilisateurRepository {
     }
 
     public Optional<Utilisateur> findLastBidder(int articleId) {
-        return jdbc.query("select TOP 1 * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = 1 order by date_enchere desc", MAPPER, articleId).stream().findFirst();
+        //FIXME: PreparedStatementCallback; SQL [select * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = articleId order by date_enchere desc]; L'index 1 est hors limites.
+        return jdbc.query("select TOP 1 * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = ? order by date_enchere desc", MAPPER, articleId).stream().findFirst();
+    }
+
+    public int updateCredit(Utilisateur u) {
+        return jdbc.update("update UTILISATEURS set credit = ? where pseudo = ?", u.getCredit(), u.getPseudo());
     }
 }

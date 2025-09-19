@@ -58,8 +58,8 @@
                             <div class="col-md-12">
                                 <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
                             </div>
-                            <div class="col-md-12" th:if="${userCredit > article.prixVente}">
-                                <form th:action="@{/bid?id=${article.noArticle}}">
+                            <div class="col-md-12" th:if="${userCredit > article.prixVente && article.statutEnchere == 1}">
+                                <form th:action="@{/bid(id=${article.noArticle})}" method="POST">
                                     <label for="inputPrice">Montant de votre enchère</label>
                                     <input id="inputPrice" type="number" name="inputPrice">
                                     <button type="submit">Enchérir</button>

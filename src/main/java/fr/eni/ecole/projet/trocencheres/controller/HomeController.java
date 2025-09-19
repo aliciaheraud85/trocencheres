@@ -88,7 +88,11 @@ public class HomeController {
 
     @GetMapping("/auction-details")
     public String auctionDetails(int id, Principal principal, Model model) {
-        int userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
+        int userCredit;
+        if (principal != null) {
+            userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
+            model.addAttribute("userCredit", userCredit);
+        }
         if (id > 0) {
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
             if (articleById != null) {
@@ -97,7 +101,6 @@ public class HomeController {
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
-                model.addAttribute("userCredit", userCredit);
                 return "auction-details";
             } else {
                 System.out.println("This article does not exist");
@@ -111,22 +114,27 @@ public class HomeController {
 
     @PostMapping("/bid")
     public String bid(int id, @RequestParam(name = "inputPrice", required = true) int amount, Principal principal) {
+        if (principal == null) {return "redirect:/";}
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
         Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
 
         if (article.isOnSale() && article.isValidBid(amount)) {
             try {
-                utilisateurService.creditOldBidder(article.getNoArticle(), amount);
-                bidder.setCredit(bidder.getCredit() - amount);
-                userService.updateUserProfile(bidder, adresseService.getAdresse(bidder.getNoAdresse()));
+                if (article.getPrixVente() != 0) {
+                    utilisateurService.creditOldBidder(article.getNoArticle(), article.getPrixVente());
+                }
+                userService.debitBidder(bidder, amount);
                 enchereService.createEnchere(bidder, id, amount);
-                article.setPrixVente(amount);
-                articleAVendreService.updateArticle(article);
+                articleAVendreService.updateArticlePrice(article, amount);
+                return String.format("redirect:/auction-details?id=%d&status=bid_placed", id);
             } catch (SQLException e) {
+                System.out.println("warning");
+                System.out.println(e.getMessage());
+                System.out.println("warning");
                 return "redirect:/auction-details?error";
             }
         }
-        return String.format("redirect:/auction-details?id=%d&status=bid_placed", id);
+        return String.format("redirect:/auction-details?id=%d", id);
     }
 
     @GetMapping("/add-sale")
