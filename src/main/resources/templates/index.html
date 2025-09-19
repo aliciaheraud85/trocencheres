@@ -48,12 +48,16 @@
               </div>
               <div class="row p-2 mb-5">
                   <div class="col-md-4">
-                      <select class="form-select" aria-label="Default select example" name="selectCategory">
-                          <option selected>Toutes</option>
-                          <div th:each="categorie : ${categories}">
-                              <option value="1" th:text="${categorie.libelle}"></option>
-                          </div>
-                    </select>
+                      <form th:action="@{/}" method="get">
+                          <select class="form-select" aria-label="Default select example" name="categoryId" onchange="this.form.submit()">
+                              <option value="" th:text="'Toutes'" th:selected="${selectedCategoryId == null}"></option>
+                              <option th:each="categorie : ${categories}"
+                                      th:value="${categorie.noCategorie}"
+                                      th:text="${categorie.libelle}"
+                                      th:selected="${selectedCategoryId != null} ? (${categorie.noCategorie} == ${selectedCategoryId}) : false">
+                              </option>
+                          </select>
+                      </form>
                   </div>
                   <div class="col-md-4"><button class="btn btn-outline-secondary" type="submit">Annuler</button></div>
                   <div class="col-md-4"></div>

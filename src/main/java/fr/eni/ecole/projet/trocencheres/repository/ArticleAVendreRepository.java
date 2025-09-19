@@ -58,4 +58,8 @@ public class ArticleAVendreRepository {
     public List<ArticleAVendre> findAll() {
         return jdbc.query("select * from ARTICLES_A_VENDRE", MAPPER);
     }
+
+    public List<ArticleAVendre> findByCategory(int categoryId) {
+        return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ?", MAPPER, categoryId);
+    }
 }

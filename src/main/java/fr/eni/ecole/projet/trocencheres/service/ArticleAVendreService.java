@@ -29,6 +29,11 @@ public class ArticleAVendreService {
         return articleRepository.findAll();
     }
 
+    public List<ArticleAVendre> getAuctionList(Integer categoryId){
+        if (categoryId == null) return getAuctionList();
+        return articleRepository.findByCategory(categoryId);
+    }
+
     public List<Categorie> getCategoriesList(){
         return categorieRepository.findAll();
     }

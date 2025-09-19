@@ -22,12 +22,13 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index(Model model){
-        List<ArticleAVendre> lstArticles = articleAVendreService.getAuctionList();
+    public String index(@RequestParam(value = "categoryId", required = false) Integer categoryId, Model model){
+        List<ArticleAVendre> lstArticles = articleAVendreService.getAuctionList(categoryId);
         model.addAttribute("articles", lstArticles);
 
         List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
         model.addAttribute("categories", lstCategories);
+        model.addAttribute("selectedCategoryId", categoryId);
         return "index";
     }
 
