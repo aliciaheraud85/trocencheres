@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
+					contentPage=~{:: .center-main})}">
+<head>
+    <title>Sign In Page</title>
+</head>
+<body>
+<main class="center-main">
+    <div class="container text-center">
+        <div class="row align-items-end">
+            <div class="col-md-12">
+                <h1>Sign Up</h1>
+
+                <div th:if="${param.error}">Something wrong happened during account creation.</div>
+
+                <form id="register-form" class="user-form" th:action="@{/register}" th:object="${signUpRequest}" method="post">
+
+                    <label class="grid-2" for="inputUsername">Username</label>
+                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                    <input class="grid-2" id="inputUsername" type="text" name="username" th:field="*{username}" placeholder="username" required/>
+
+                    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                    <label class="grid-2" for="inputLastName">Last Name</label>
+                    <input class="grid-2" id="inputLastName" type="text" name="lastName" th:field="*{lastName}" placeholder="last name" required/>
+
+                    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                    <label class="grid-2" for="inputFirstName">First Name</label>
+                    <input class="grid-2" id="inputFirstName" type="text" name="firstName" th:field="*{firstName}" placeholder="first name" required/>
+
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    <label class="grid-2" for="inputEmail">Email</label>
+                    <input class="grid-2" id="inputEmail" type="text" name="email" th:field="*{email}" placeholder="email" required/>
+
+                    <label class="grid-2" for="inputPhoneNb">Phone Number</label>
+                    <input class="grid-2" id="inputPhoneNb" type="text" name="phoneNumber" th:field="*{phoneNumber}" placeholder="phone number" />
+
+                    <h3 class="grid-2">Address</h3>
+
+                    <div th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div>
+                    <label class="grid-2" for="street">Street</label>
+                    <input class="grid-2" id="street" type="text" name="street" th:field="*{street}" placeholder="street" required />
+
+                    <div th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></div>
+                    <label class="grid-2" for="postalCode">Postal Code</label>
+                    <input class="grid-2" id="postalCode" type="text" name="postalCode" th:field="*{postalCode}" placeholder="postal code" required />
+
+                    <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+                    <label class="grid-2" for="city">City</label>
+                    <input class="grid-2" id="city" type="text" name="city" th:field="*{city}" placeholder="city" required />
+
+                    <br>
+
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                    <label class="grid-2" for="inputPassword">Password</label>
+                    <input class="grid-2" id="inputPassword" type="password" name="password" th:field="*{password}" placeholder="password" required/>
+
+                    <input class="grid-2" type="submit" value="Sign Up"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

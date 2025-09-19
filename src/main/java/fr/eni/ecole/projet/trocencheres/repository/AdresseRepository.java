@@ -1,17 +1,16 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 @Repository
@@ -27,7 +26,6 @@ public class AdresseRepository {
         @Override
         public Adresse mapRow(ResultSet rs, int rowNum) throws SQLException {
             Adresse a = new Adresse();
-            a.setNoAdresse(rs.getInt("no_adresse"));
             a.setRue(rs.getString("rue"));
             a.setCodePostal(rs.getString("code_postal"));
             a.setVille(rs.getString("ville"));

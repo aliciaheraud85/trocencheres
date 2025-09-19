@@ -1,6 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
-import fr.eni.ecole.projet.trocencheres.security.CustomAuthenticationProvider;
+import fr.eni.ecole.projet.trocencheres.dto.SignUpRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.JWTService;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginRequest;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginResponse;
@@ -10,13 +10,16 @@ import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.SameSiteCookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.security.core.Authentication;
 
@@ -31,6 +34,27 @@ public class AuthController {
 
     @Value("${spring.security.jwtExpirationMs}")
     private int jwtExpirationMs;
+
+    @GetMapping("/register")
+    public String getRegisterForm(SignUpRequest signUpRequest) {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute SignUpRequest signUpRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        try {
+            int id = utilisateurService.createUser(signUpRequest);
+        } catch (DuplicateKeyException e) {
+            return "redirect:register?error";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "redirect:register?error";
+        }
+        return "redirect:/";
+    }
 
     @GetMapping("/login")
     public String getLoginForm(LoginRequest loginRequest) {
