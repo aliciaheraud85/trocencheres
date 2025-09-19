@@ -1,7 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
 import fr.eni.ecole.projet.trocencheres.bo.*;
-import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
+import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
 import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
 import fr.eni.ecole.projet.trocencheres.repository.EnchereRepository;
 import fr.eni.ecole.projet.trocencheres.service.*;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.*;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
@@ -22,13 +23,17 @@ import java.util.List;
 public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
-    private final UtilisateurService utilisateurService;
     private final UserService userService;
+    private final EnchereService enchereService;
+    private final UtilisateurService utilisateurService;
+    private final AdresseService adresseService;
 
-    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService) {
+    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService, EnchereService enchereService, AdresseService adresseService) {
         this.articleAVendreService = articleAVendreService;
-        this.utilisateurService = utilisateurService;
         this.userService = userService;
+        this.enchereService = enchereService;
+        this.utilisateurService = utilisateurService;
+        this.adresseService = adresseService;
     }
 
     @GetMapping("/")
@@ -72,38 +77,40 @@ public class HomeController {
     }
 
     @GetMapping("/hello")
-    public String helloWorld(){
+    public String helloWorld() {
         return "hello";
     }
 
     @GetMapping("/forbidden")
-    public String forbidden(){
+    public String forbidden() {
         return "forbidden";
     }
 
     @GetMapping("/auction-details")
-    public String auctionDetails(int id, Model model){
-        if(id > 0){
+    public String auctionDetails(int id, Principal principal, Model model) {
+        int userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
+        if (id > 0) {
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
-            if(articleById != null) {
+            if (articleById != null) {
                 Categorie categorie = articleAVendreService.getCategorieForArticle(id);
                 Adresse adresse = articleAVendreService.getAdresseForArticle(id);
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
+                model.addAttribute("userCredit", userCredit);
                 return "auction-details";
-            }else {
+            } else {
                 System.out.println("This article does not exist");
                 return "redirect:/index";
             }
-        }else{
+        } else {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
     }
 
-    @GetMapping("/bid")
-    public String bid(int id, int amount, Principal principal) {
+    @PostMapping("/bid")
+    public String bid(int id, @RequestParam(name = "inputPrice", required = true) int amount, Principal principal) {
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
         Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
 
