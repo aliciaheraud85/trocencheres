@@ -31,15 +31,20 @@
                   <div class="col-md-2"></div>
                   <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
                       <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-                      <!-- Change to display user name when logged in -->
-                      <p>Participant : Username</p>
+                      <!-- If user is authenticated, show quick filters -->
+                      <div>
+                          <a th:href="@{'/'(view='participating', categoryId=${selectedCategoryId}, q=${param.q})}">Mes participations</a> |
+                          <a th:href="@{'/'(view='won', categoryId=${selectedCategoryId}, q=${param.q})}">Mes gains</a> |
+                          <a th:href="@{'/'(view='mySales', categoryId=${selectedCategoryId}, q=${param.q})}">Mes ventes</a>
+                      </div>
                   </div>
               </div>
               <div class="row p-2">
                   <div class="col-md-12"><h5>Filtres :</h5></div>
                 <div class="col-md-4 ">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                    <form th:action="@{/}" method="get" class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" th:value="${param.q}" />
+                        <input type="hidden" name="categoryId" th:value="${selectedCategoryId}" />
                         <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
                     </form>
                 </div>
@@ -57,6 +62,7 @@
                                       th:selected="${selectedCategoryId != null} ? (${categorie.noCategorie} == ${selectedCategoryId}) : false">
                               </option>
                           </select>
+                          <input type="hidden" name="q" th:value="${param.q}" />
                       </form>
                   </div>
                   <div class="col-md-4"><button class="btn btn-outline-secondary" type="submit">Annuler</button></div>

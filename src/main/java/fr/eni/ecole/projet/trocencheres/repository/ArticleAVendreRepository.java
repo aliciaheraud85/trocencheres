@@ -62,4 +62,34 @@ public class ArticleAVendreRepository {
     public List<ArticleAVendre> findByCategory(int categoryId) {
         return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ?", MAPPER, categoryId);
     }
+
+    public List<ArticleAVendre> findByCategoryAndName(int categoryId, String namePattern) {
+        return jdbc.query("select * from ARTICLES_A_VENDRE where no_categorie = ? and nom_article like ?", MAPPER, categoryId, namePattern);
+    }
+
+    public List<ArticleAVendre> findByName(String namePattern) {
+        return jdbc.query("select * from ARTICLES_A_VENDRE where nom_article like ?", MAPPER, namePattern);
+    }
+
+    public List<ArticleAVendre> findByParticipant(String username) {
+        String sql = "select distinct a.* from ARTICLES_A_VENDRE a " +
+                "join ENCHERES e on a.no_article = e.no_article " +
+                "where e.id_utilisateur = ?";
+        return jdbc.query(sql, MAPPER, username);
+    }
+
+    public List<ArticleAVendre> findWonByUser(String username) {
+        // Won = auction finished (statut_enchere = 2) and highest bidder = username
+        String sql = "select a.* from ARTICLES_A_VENDRE a " +
+                "join ENCHERES e on a.no_article = e.no_article " +
+                "where a.statut_enchere = 2 and e.id_utilisateur = ? and e.montant_enchere = (select max(montant_enchere) from ENCHERES where no_article = a.no_article)";
+        return jdbc.query(sql, MAPPER, username);
+    }
+
+    public List<ArticleAVendre> findBySellerAndStatus(String sellerId, Integer statutEnchere) {
+        if (statutEnchere == null) {
+            return jdbc.query("select * from ARTICLES_A_VENDRE where id_utilisateur = ?", MAPPER, sellerId);
+        }
+        return jdbc.query("select * from ARTICLES_A_VENDRE where id_utilisateur = ? and statut_enchere = ?", MAPPER, sellerId, statutEnchere);
+    }
 }
