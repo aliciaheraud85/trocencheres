@@ -51,6 +51,7 @@
                             <div class="col-md-12">
                                 <p>Mise à prix : <span th:text="${article.prixInitial}"></span></p>
                             </div>
+                            <div th:if="${param.status == 'bid_placed'}">Enchère placée avec succès.</div>
                             <div class="col-md-12">
                                 <p>Meilleure offre : <span th:text="${article.prixVente}"></span></p>
                             </div>

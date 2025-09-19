@@ -4,11 +4,9 @@ import fr.eni.ecole.projet.trocencheres.bo.*;
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
 import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
 import fr.eni.ecole.projet.trocencheres.repository.EnchereRepository;
-import fr.eni.ecole.projet.trocencheres.service.UserService;
-import fr.eni.ecole.projet.trocencheres.service.UtilisateurService;
+import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import java.security.Principal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.*;
@@ -16,31 +14,28 @@ import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
+import java.security.Principal;
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
 public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
-    private final UserService userService;
     private final UtilisateurService utilisateurService;
-    private final EnchereRepository enchereRepository;
-    private final ArticleAVendreRepository articleAVendreRepository;
+    private final UserService userService;
 
-    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService, EnchereRepository enchereRepository, ArticleAVendreRepository articleAVendreRepository) {
+    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService) {
         this.articleAVendreService = articleAVendreService;
         this.utilisateurService = utilisateurService;
         this.userService = userService;
-        this.enchereRepository = enchereRepository;
-        this.articleAVendreRepository = articleAVendreRepository;
     }
 
     @GetMapping("/")
     public String index(@RequestParam(value = "categoryId", required = false) Integer categoryId,
                         @RequestParam(value = "q", required = false) String q,
                         @RequestParam(value = "view", required = false) String view,
-                        @RequestParam(value = "status", required = false) Integer status,
+                        @RequestParam(value = "status", required = false) String status,
                         Principal principal,
                         Model model){
 
@@ -72,6 +67,7 @@ public class HomeController {
         List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
         model.addAttribute("categories", lstCategories);
         model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("status", status);
         return "index";
     }
 
@@ -107,22 +103,23 @@ public class HomeController {
     }
 
     @GetMapping("/bid")
-    public String bid(int id, int amount, Principal principal){
-        String status = "";
+    public String bid(int id, int amount, Principal principal) {
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
-        Utilisateur user = userService.getUserProfile(principal.getName()).getUtilisateur();
-        if (user.getCredit() > article.getPrixVente() && article.getStatutEnchere() == 1) {
-            article.setPrixVente(amount);
-            Enchere bid = new Enchere(user.getPseudo(), id, amount, LocalDateTime.now());
-//            TODO: remplacer les appels au repo par le service & déplacer la logique métier ici dans le service
-            int bidId = enchereRepository.createEnchere(bid);
-//            TODO: ajouter la notion d'enchere dans l'objet ArticleAVendre ; ajouter le moyen de récupérer la dernière enchère (par montant de l'enchère ?) pour pouvoir retrouver l'utilisateur qui a remporté l'enchère
-            int rowIsUpdated = articleAVendreRepository.updatePrixVente(article);
-            if (bidId != 0 && rowIsUpdated != 0) {
-                return "redirect:/auction-details?id=" + id +"&status=" + status;
+        Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
+
+        if (article.isOnSale() && article.isValidBid(amount)) {
+            try {
+                utilisateurService.creditOldBidder(article.getNoArticle(), amount);
+                bidder.setCredit(bidder.getCredit() - amount);
+                userService.updateUserProfile(bidder, adresseService.getAdresse(bidder.getNoAdresse()));
+                enchereService.createEnchere(bidder, id, amount);
+                article.setPrixVente(amount);
+                articleAVendreService.updateArticle(article);
+            } catch (SQLException e) {
+                return "redirect:/auction-details?error";
             }
         }
-        return "redirect:/auction-details?error";
+        return String.format("redirect:/auction-details?id=%d&status=bid_placed", id);
     }
 
     @GetMapping("/add-sale")

@@ -2,7 +2,6 @@ package fr.eni.ecole.projet.trocencheres.service;
 
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
 import fr.eni.ecole.projet.trocencheres.repository.CategorieRepository;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 
 import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +90,13 @@ public class ArticleAVendreService {
             return adresseRepository.findById(article.getNoAdresseRetrait()).orElse(null);
         }else{
             return null;
+        }
+    }
+
+    public void updateArticle(ArticleAVendre article) throws SQLException {
+        int success = articleRepository.updatePrixVente(article);
+        if (success == 0) {
+            throw new SQLException("database article update failed");
         }
     }
 

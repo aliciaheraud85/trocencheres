@@ -21,7 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtilisateurService {
@@ -64,4 +66,20 @@ public class UtilisateurService {
     public PasswordEncoder getEncoder() {
         return encoder;
     }
+
+    public void creditOldBidder(int articleId, int amount) throws SQLException {
+        Utilisateur oldBidder;
+        Optional<Utilisateur> queriedUser = utilisateurRepository.findLastBidder(articleId);
+        if (queriedUser.isEmpty()) {
+            throw new SQLException("utilisateur not found in database");
+        }
+        oldBidder = queriedUser.get();
+        oldBidder.setCredit(oldBidder.getCredit() + amount);
+
+        int success = utilisateurRepository.updateUtilisateur(oldBidder);
+        if (success == 0) {
+            throw new SQLException("database utilisateur update failed");
+        }
+    }
+
 }

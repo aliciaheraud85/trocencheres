@@ -55,4 +55,8 @@ public class UtilisateurRepository {
         return jdbc.update("update UTILISATEURS set nom = ?, prenom = ?, email = ?, telephone = ?, mot_de_passe = ?, no_adresse = ? where pseudo = ?",
                 u.getNom(), u.getPrenom(), u.getEmail(), u.getTelephone(), u.getMotDePasse(), u.getNoAdresse(), u.getPseudo());
     }
+
+    public Optional<Utilisateur> findLastBidder(int articleId) {
+        return jdbc.query("select TOP 1 * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = 1 order by date_enchere desc", MAPPER, articleId).stream().findFirst();
+    }
 }

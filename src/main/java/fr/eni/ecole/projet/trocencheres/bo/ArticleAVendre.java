@@ -59,6 +59,13 @@ public class ArticleAVendre {
     public void setNoCategorie(int noCategorie) { this.noCategorie = noCategorie; }
     public int getNoAdresseRetrait() { return noAdresseRetrait; }
     public void setNoAdresseRetrait(int noAdresseRetrait) { this.noAdresseRetrait = noAdresseRetrait; }
+    public boolean isOnSale() {return this.statutEnchere == 1;}
+    public boolean isValidBid(int amount) {
+        if (getPrixVente() == 0) {
+            return amount > getPrixInitial();
+        }
+        return amount > getPrixVente();
+    }
 
     @Override
     public boolean equals(Object obj) {

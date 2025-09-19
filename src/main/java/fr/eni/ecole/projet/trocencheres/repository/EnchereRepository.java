@@ -1,6 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.Enchere;
+import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -42,4 +43,5 @@ public class EnchereRepository {
         String queryString = "INSERT INTO ENCHERES(id_utilisateur, no_article, montant_enchere, date_enchere) VALUES (?, ?, ?, ?)";
         return jdbc.update(queryString, bid.getIdUtilisateur(), bid.getNoArticle(), bid.getMontantEnchere(), bid.getDateEnchere());
     }
+
 }
