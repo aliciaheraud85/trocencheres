@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @Controller
@@ -72,7 +73,7 @@ public class HomeController {
     }
 
     @GetMapping("/auction-details")
-    public String auctionDetails(int id, Model model){
+    public String auctionDetails(int id, Principal principal, Model model){
         if(id > 0){
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
             if(articleById != null) {
@@ -81,6 +82,10 @@ public class HomeController {
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
+                String currentUser = principal != null ? principal.getName() : null;
+                boolean canCancel = currentUser != null && articleAVendreService.isCancelable(id, currentUser);
+                model.addAttribute("currentUser", currentUser);
+                model.addAttribute("canCancel", canCancel);
                 return "auction-details";
             }else {
                 System.out.println("This article does not exist");
@@ -90,6 +95,15 @@ public class HomeController {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @PostMapping("/auction/cancel")
+    public String cancelAuction(int id, Principal principal, Model model){
+        String username = principal != null ? principal.getName() : null;
+        if (username == null) return "redirect:/login";
+        boolean ok = articleAVendreService.cancelAuction(id, username);
+        // redirect back to details with a query param indicating result
+        return "redirect:/auction-details?id=" + id + (ok ? "&cancelled=1" : "&cancelled=0");
     }
 
 
