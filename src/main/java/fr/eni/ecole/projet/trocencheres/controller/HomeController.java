@@ -1,6 +1,7 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
 import fr.eni.ecole.projet.trocencheres.bo.*;
+import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
 import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class HomeController {
     public String index(@RequestParam(value = "categoryId", required = false) Integer categoryId,
                         @RequestParam(value = "q", required = false) String q,
                         @RequestParam(value = "view", required = false) String view,
-                        @RequestParam(value = "status", required = false) String status,
+                        @RequestParam(value = "status", required = false) Integer status,
                         Principal principal,
                         Model model){
 
@@ -65,7 +66,6 @@ public class HomeController {
         List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
         model.addAttribute("categories", lstCategories);
         model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("status", status);
         return "index";
     }
 
@@ -80,7 +80,7 @@ public class HomeController {
     }
 
     @GetMapping("/auction-details")
-    public String auctionDetails(int id, Principal principal, Model model) {
+    public String auctionDetails(int id, @RequestParam(name = "status", required = false) String status, Principal principal, Model model) {
         int userCredit;
         if (principal != null) {
             userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
@@ -94,6 +94,7 @@ public class HomeController {
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
+                model.addAttribute("status", status);
                 if (articleById.isOnSale() && articleById.getPrixVente() > 0) {
                     try {
                         String highestBidder = articleAVendreService.getHighestBidderUsername(id);
