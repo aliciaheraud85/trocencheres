@@ -1,6 +1,4 @@
 <header xmlns:th="http://www.thymeleaf.org" data-th-fragment="header-frag">
-
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <a href="/"><img src="/images/logoENI.png" alt="ENI Logo" class="img-fluid logo"></a>
@@ -11,6 +9,14 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <label for="locales" th:text="#{lang.change}" style="display:none;"></label>
+                            <select id="locales" th:onchange="changeLocale()">
+                                <option value="" th:text="#{lang.change}"></option>
+                                <option value="en" th:text="#{lang.en}"></option>
+                                <option value="fr" th:text="#{lang.fr}"></option>
+                            </select>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="fa-regular fa-circle-user"></i></a>

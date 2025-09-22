@@ -46,3 +46,16 @@
 
 </body>
 </html>
+
+<!--<script type="text/javascript" th:src="@{/js/locales.js}"></script>-->
+
+<script type="text/javascript" th:inline>
+    function changeLocale() {
+        document.querySelector("#locales").addEventListener('selectionchange', function() {
+            const selectedOption = this.value;
+            if (selectedOption !== '') {
+                window.location.redirect(window.location.pathname + '?lang=' + selectedOption);
+            }
+        })
+    }
+</script>

@@ -17,11 +17,11 @@
                 <div th:if="${param.logout}">
                     You have been logged out.
                 </div>
-                <h1>Sign In</h1>
+                <h1 th:text="#{login.title}"></h1>
                 <form id="login-form" class="user-form" th:action="@{/login}" th:object="${loginRequest}" method="post">
-                    <label class="grid-2" for="inputUsername"> Username</label>
+                    <label class="grid-2" for="inputUsername" th:text="#{login.username}"></label>
                     <input class="grid-2" id="inputUsername" type="text" name="username" th:field="*{username}" required/>
-                    <label class="grid-2" for="inputPassword"> Password</label>
+                    <label class="grid-2" for="inputPassword" th:text="#{login.password}"></label>
                     <input class="grid-2" id="inputPassword" type="password" name="password" th:field="*{password}" required/>
                     <input class="grid-2" type="submit" value="Sign In"/>
                 </form>
