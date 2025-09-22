@@ -28,48 +28,40 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-2"></div>
                     <div class="col-md-4">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p>Article : <span th:text="${article.nomArticle}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Catégorie : <span th:text="${categorie.libelle}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Description : <span th:text="${article.description}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Retrait : <span th:text="${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Vendeur : <span th:text="${article.idUtilisateur}"></span></p>
-                            </div>
-                        </div>
+                        <p>Article : <span th:text="${article.nomArticle}"></span></p>
+                        <p>Catégorie : <span th:text="${categorie.libelle}"></span></p>
+                        <p>Description : <span th:text="${article.description}"></span></p>
+                        <p>Retrait : <span th:text="${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span></p>
+                        <p>Vendeur : <span th:text="${article.idUtilisateur}"></span></p>
                     </div>
                     <div class="col-md-4">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p>Mise à prix : <span th:text="${article.prixInitial}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Meilleure offre : <span th:text="${article.prixVente}"></span></p>
-                            </div>
-                            <div class="col-md-12">
-                                <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
-                            </div>
-                        </div>
+                        <p>Mise à prix : <span th:text="${article.prixInitial}"></span></p>
+                        <p th:if="${param.status == 'bid_placed'}">Enchère placée avec succès.</p>
+                        <p>Meilleure offre : <span th:text="${article.prixVente}"></span> </p>
+                        <p>Acquéreur : <span th:text="${highestBidder}" /></p>
+                        <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
+                        <form
+                                th:action="@{/bid(id=${article.noArticle})}"
+                                th:if="${article.statutEnchere == 1 && userCredit > article.prixVente && article.statutEnchere == 1}"
+                                method="POST">
+
+                            <label for="inputPrice">Montant de votre enchère</label>
+                            <input id="inputPrice" type="number" name="inputPrice">
+                            <button type="submit">Enchérir</button>
+                        </form>
                     </div>
                     <div class="col-md-2"></div>
                 </div>
                 
                 <div class="row mt-3 mb-5 align-items-center">
-                    <div class="col-md-4"></div>
+                    <div class="col-md-2"></div>
                     <div class="col-md-4 d-flex justify-content-center">
                         <a href="/" class="btn btn-outline-secondary py-2 px-3">Retour</a>
                     </div>
                     <div class="col-md-4">
                         <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid" style="max-height: 150px;">
                     </div>
+                    <div class="col-md-2"></div>
                 </div>
             </div>
         </div>

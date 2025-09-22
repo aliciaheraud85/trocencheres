@@ -1,6 +1,5 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
-import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,5 +53,13 @@ public class UtilisateurRepository {
     public int updateUtilisateur(Utilisateur u) {
         return jdbc.update("update UTILISATEURS set nom = ?, prenom = ?, email = ?, telephone = ?, mot_de_passe = ?, no_adresse = ? where pseudo = ?",
                 u.getNom(), u.getPrenom(), u.getEmail(), u.getTelephone(), u.getMotDePasse(), u.getNoAdresse(), u.getPseudo());
+    }
+
+    public Optional<Utilisateur> findLastBidder(int articleId) {
+        return jdbc.query("select TOP 1 * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = ? order by date_enchere desc", MAPPER, articleId).stream().findFirst();
+    }
+
+    public int updateCredit(Utilisateur u) {
+        return jdbc.update("update UTILISATEURS set credit = ? where pseudo = ?", u.getCredit(), u.getPseudo());
     }
 }

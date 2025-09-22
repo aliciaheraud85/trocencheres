@@ -1,25 +1,20 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
-import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.bo.*;
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
-import fr.eni.ecole.projet.trocencheres.service.UserService;
+import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.User;
-import org.springframework.security.access.prepost.PreAuthorize;
-import fr.eni.ecole.projet.trocencheres.bo.Adresse;
-import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import java.security.Principal;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.*;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -27,10 +22,12 @@ public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
     private final UserService userService;
+    private final UtilisateurService utilisateurService;
 
-    public HomeController(ArticleAVendreService articleAVendreService, UserService userService) {
+    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService) {
         this.articleAVendreService = articleAVendreService;
         this.userService = userService;
+        this.utilisateurService = utilisateurService;
     }
 
     @GetMapping("/")
@@ -73,34 +70,76 @@ public class HomeController {
     }
 
     @GetMapping("/hello")
-    public String helloWorld(){
+    public String helloWorld() {
         return "hello";
     }
 
     @GetMapping("/forbidden")
-    public String forbidden(){
+    public String forbidden() {
         return "forbidden";
     }
 
     @GetMapping("/auction-details")
-    public String auctionDetails(int id, Model model){
-        if(id > 0){
+    public String auctionDetails(int id, @RequestParam(name = "status", required = false) String status, Principal principal, Model model) {
+        int userCredit;
+        if (principal != null) {
+            userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
+            model.addAttribute("userCredit", userCredit);
+        }
+        if (id > 0) {
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
-            if(articleById != null) {
+            if (articleById != null) {
                 Categorie categorie = articleAVendreService.getCategorieForArticle(id);
                 Adresse adresse = articleAVendreService.getAdresseForArticle(id);
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
+                model.addAttribute("status", status);
+                if (articleById.isOnSale() && articleById.getPrixVente() > 0) {
+                    try {
+                        String highestBidder = articleAVendreService.getHighestBidderUsername(id);
+                        model.addAttribute("highestBidder", highestBidder);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return "auction-details";
-            }else {
+            } else {
                 System.out.println("This article does not exist");
                 return "redirect:/index";
             }
-        }else{
+        } else {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @PostMapping("/bid")
+    public String bid(int id, @RequestParam(name = "inputPrice", required = true) int amount, Principal principal) {
+        if (principal == null) {return "redirect:/";}
+        ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
+        Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
+        int oldCredit = bidder.getCredit();
+
+        if (article.isOnSale() && article.isValidBid(amount)) {
+            try {
+                boolean bidderDebited = userService.debitBidder(bidder, amount);
+                if (article.getPrixVente() != 0 && bidderDebited) {
+                    boolean oldBidderCredited = utilisateurService.creditOldBidder(article.getNoArticle(), article.getPrixVente());
+                    if (!oldBidderCredited) {
+                        userService.updateUserCredit(bidder, oldCredit);
+                        return "redirect:/auction-details?error";
+                    }
+                }
+                articleAVendreService.createEnchere(bidder, id, amount);
+                articleAVendreService.updateArticlePrice(article, amount);
+                return String.format("redirect:/auction-details?id=%d&status=bid_placed", id);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                return "redirect:/auction-details?error";
+            }
+        }
+        return String.format("redirect:/auction-details?id=%d", id);
     }
 
     @GetMapping("/add-sale")
