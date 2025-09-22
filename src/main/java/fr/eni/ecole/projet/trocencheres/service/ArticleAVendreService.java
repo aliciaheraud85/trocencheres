@@ -2,6 +2,7 @@ package fr.eni.ecole.projet.trocencheres.service;
 
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
+import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
 import fr.eni.ecole.projet.trocencheres.repository.CategorieRepository;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,15 @@ public class ArticleAVendreService {
     private final ArticleAVendreRepository articleRepository;
     private final CategorieRepository categorieRepository;
     private final AdresseRepository adresseRepository;
+    private final UtilisateurService utilisateurService;
+    private final UserService userService;
 
-    public ArticleAVendreService(ArticleAVendreRepository articleRepository,  CategorieRepository categorieRepository, AdresseRepository adresseRepository) {
+    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, UtilisateurService utilisateurService, UserService userService) {
         this.articleRepository = articleRepository;
         this.categorieRepository = categorieRepository;
         this.adresseRepository = adresseRepository;
+        this.utilisateurService = utilisateurService;
+        this.userService = userService;
     }
 
     public List<ArticleAVendre> getAuctionList(){
@@ -86,5 +91,11 @@ public class ArticleAVendreService {
         }else{
             return null;
         }
+    }
+
+    public int createArticle(ArticleAVendre article, String username){
+        article.setIdUtilisateur(username);
+        article.setStatutEnchere(0);
+        return articleRepository.createArticleAVendre(article);
     }
 }

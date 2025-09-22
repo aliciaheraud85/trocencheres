@@ -1,25 +1,36 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
+import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
+import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
+import fr.eni.ecole.projet.trocencheres.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.catalina.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
+    private final UserService userService;
 
-    public HomeController(ArticleAVendreService articleAVendreService) {
+    public HomeController(ArticleAVendreService articleAVendreService, UserService userService) {
         this.articleAVendreService = articleAVendreService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -93,12 +104,34 @@ public class HomeController {
     }
 
     @GetMapping("/add-sale")
-    public String addSale(Model  model){
-        List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
-        model.addAttribute("categories", lstCategories);
-        List<Adresse> lstAdresse = articleAVendreService.getAdresseList();
-        model.addAttribute("adresse", lstAdresse);
+    public String addSale(Model  model, Principal principal){
+        //Retrieving my logged-in username
+        String username = principal != null ? principal.getName() : null;
+        UserProfile profile = null;
+        if (username != null) {
+            profile = userService.getUserProfile(username);
+        }
+        ArticleAVendre article = new ArticleAVendre();
+
+        //Retrieving my logged in user's address
+        if(profile != null && profile.getAdresse() != null){
+            article.setNoAdresseRetrait(profile.getAdresse().getNoAdresse());
+        }
+        model.addAttribute("profile", profile);
+        model.addAttribute("article", article);
+        model.addAttribute("categories", articleAVendreService.getCategoriesList());
+        model.addAttribute("adresse", articleAVendreService.getAdresseList());
         return "add-sale";
+    }
+
+    @RequestMapping(value = "/add-sale", method = RequestMethod.POST)
+    public String createArticle(@ModelAttribute ArticleAVendre article, Principal principal, HttpServletRequest request){
+        if(principal == null){
+            return "redirect:/login";
+        }
+
+        articleAVendreService.createArticle(article, principal.getName());
+        return "redirect:/";
     }
 
 

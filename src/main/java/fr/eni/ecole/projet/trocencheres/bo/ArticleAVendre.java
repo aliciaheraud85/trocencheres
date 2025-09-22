@@ -25,12 +25,12 @@ public class ArticleAVendre {
         this.photo = photo;
         this.dateDebutEncheres = dateDebutEncheres;
         this.dateFinEncheres = dateFinEncheres;
-        this.statutEnchere = statutEnchere;
-        this.prixInitial = prixInitial;
-        this.prixVente = prixVente;
+        this.statutEnchere = 0;
+        this.prixInitial = 0;
+        this.prixVente = 0;
         this.idUtilisateur = idUtilisateur;
-        this.noCategorie = noCategorie;
-        this.noAdresseRetrait = noAdresseRetrait;
+        this.noCategorie = 1;
+        this.noAdresseRetrait = 1;
     }
 
     // getters/setters

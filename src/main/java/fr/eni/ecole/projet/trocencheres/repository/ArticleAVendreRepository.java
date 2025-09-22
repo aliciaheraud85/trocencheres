@@ -64,12 +64,13 @@ public class ArticleAVendreRepository {
         return jdbc.query("select * from ARTICLES_A_VENDRE", MAPPER);
     }
 
-    public long createArticleAVendre(ArticleAVendre a) {
+    public int createArticleAVendre(ArticleAVendre a) {
         String sql = "INSERT INTO ARTICLES_A_VENDRE " +
-                "(nom_article, description, date_debut_encheres, datee_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait)" +
+                "(nom_article, description, date_debut_encheres, date_fin_encheres, statut_enchere, prix_initial, prix_vente, id_utilisateur, no_categorie, no_adresse_retrait)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
 
         jdbc.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -77,12 +78,12 @@ public class ArticleAVendreRepository {
             ps.setString(2, a.getDescription());
             ps.setObject(3, a.getDateDebutEncheres() != null ? java.sql.Date.valueOf(a.getDateDebutEncheres()) : null);
             ps.setObject(4, a.getDateFinEncheres() != null ? java.sql.Date.valueOf(a.getDateFinEncheres()) : null);
-            ps.setInt(5, a.getStatutEnchere());
+            ps.setInt(5, 0); //init statut_enchere
             ps.setInt(6, a.getPrixInitial());
             ps.setInt(7, a.getPrixVente());
             ps.setString(8, a.getIdUtilisateur());
-            ps.setInt(8, a.getNoCategorie());
-            ps.setInt(9, a.getNoAdresseRetrait());
+            ps.setInt(9, a.getNoCategorie());
+            ps.setInt(10, a.getNoAdresseRetrait());
 
             return ps;
 

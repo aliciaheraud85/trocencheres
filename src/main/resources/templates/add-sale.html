@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Détails vente</title>
+    <title>Nouvelle vente</title>
     <link rel="stylesheet" data-th-href="@{/css/auction-details.css}">
 </head>
 <body>
@@ -22,58 +22,57 @@
                 <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
                     <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
                     <!-- Change to display user name when logged in -->
-                    <p>Participant : Username</p>
+                    <p th:if="${profile != null}">Participant : <span th:text="${profile.utilisateur.pseudo}"></span></p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
-                    <form action="" method="post">
+                    <form th:action="@{/add-sale}" method="post" th:object="${article}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="nameArticle" class="form-label">Article (*):</label>
-                                <input type="email" class="form-control" id="nameArticle">
+                                <label for="nomArticle" class="form-label">Article (*):</label>
+                                <input type="text" class="form-control" id="nomArticle" th:field="*{nomArticle}" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="salePrice" class="form-label">Mise à prix (*):</label>
-                                <input type="email" class="form-control" id="salePrice">
+                                <label for="prixInitial" class="form-label">Mise à prix (*):</label>
+                                <input type="number" class="form-control" id="prixInitial" th:field="*{prixInitial}" required value="0">
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="category" class="form-label">Catégorie (*):</label>
-                                <select class="form-select" aria-label="Default select example" name="selectCategory" id="category">
-                                    <option selected>Toutes</option>
-                                    <div th:each="categorie : ${categories}">
-                                        <option value="1" th:text="${categorie.libelle}"></option>
-                                    </div>
+                                <label for="categorie" class="form-label">Catégorie (*):</label>
+                                <select class="form-select" id="categorie" th:field="*{noCategorie}" required>
+                                    <option value="1">Sélectionner</option>
+                                    <option th:each="categorie : ${categories}" th:value="${categorie.noCategorie}" th:text="${categorie.libelle}"></option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="auctionStartDate" class="form-label">Début de l'enchère (*):</label>
-                                <input type="text" id="auctionStartDate" class="form-control datepicker" placeholder="JJ/MM/AAAA">
+                                <label for="dateDebutEncheres" class="form-label">Début de l'enchère (*):</label>
+                                <input type="date" id="dateDebutEncheres" class="form-control" th:field="*{dateDebutEncheres}" placeholder="JJ/MM/AAAA" required>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="description" class="form-label">Description (*):</label>
-                                <textarea class="form-control" id="description" rows="3"></textarea>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="3" required></textarea>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="auctionEndDate" class="form-label">Fin de l'enchère (*):</label>
-                                <input type="text" id="auctionEndDate" class="form-control datepicker" placeholder="JJ/MM/AAAA">
+                                <label for="dateFinEncheres" class="form-label">Fin de l'enchère (*):</label>
+                                <input type="date" id="dateFinEncheres" class="form-control" th:field="*{dateFinEncheres}" placeholder="JJ/MM/AAAA" required>
                             </div>
                             <div class="col-md-8 mb-5">
-                                <label for="address" class="form-label">Retrait (*):</label>
-                                <select class="form-select" aria-label="Default select example" name="selectCategory" id="address">
-                                    <option selected>...</option>
-                                    <div th:each="adresses : ${adresse}">
-                                        <option value="1" th:text="${adresses.rue + ' ' + adresses.codePostal + ' ' + adresses.ville}"></option>
-                                    </div>
+                                <label for="adresse" class="form-label">Retrait (*):</label>
+                                <select class="form-select" id="adresse" th:field="*{noAdresseRetrait}" required>
+                                    <option value="1">Sélectionner</option>
+                                    <option th:each="adresses : ${adresse}"
+                                            th:value="${adresses.noAdresse}"
+                                            th:text="${adresses.rue + ' ' + adresses.codePostal + ' ' + adresses.ville}">
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-5"></div>
                             <div class="row mb-5">
                                 <div class="col-md-4 d-flex justify-content-end">
-                                    <a href="" class="btn btn-outline-secondary">Suivant</a>
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
                                 </div>
                                 <div class="col-md-4 d-flex justify-content-center">
                                     <a href="" class="btn btn-outline-secondary">Annuler la vente</a>
