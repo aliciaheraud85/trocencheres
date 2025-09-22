@@ -65,7 +65,7 @@
                   <div class="col-md-4" th:each="article : ${articles}">
                       <div class="card mb-3">
                           <div class="card-header text-center">
-                              <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>
+                              <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>&ensp;<a href="" th:if=""><i class="fa-solid fa-pencil"></i></a>
                           </div>
                           <div class="card-body">
                               <div class="row">
