@@ -136,6 +136,7 @@ public class ArticleAVendreService {
         return articleRepository.createArticleAVendre(article);
     }
 
+
     public void createEnchere(Utilisateur bidder, int id, int amount) throws SQLException {
         Enchere bid = new Enchere(bidder.getPseudo(), id, amount, LocalDateTime.now());
         int success = enchereRepository.createEnchere(bid);
@@ -155,6 +156,18 @@ public class ArticleAVendreService {
             return result.get();
         } else {
             throw new SQLException("Bidder not found");
+        }
+    }
+
+    public void updateArticleAVendre(ArticleAVendre updatedArticle){
+        if (updatedArticle == null) {
+            throw new IllegalArgumentException("L'article à mettre à jour ne peut pas être null");
+        }
+
+        int rowsUpdated = articleRepository.updateArticleAVendre(updatedArticle);
+        if (rowsUpdated == 0) {
+            throw new RuntimeException("Aucun article trouvé avec l'id " + updatedArticle.getNoArticle());
+
         }
     }
 }

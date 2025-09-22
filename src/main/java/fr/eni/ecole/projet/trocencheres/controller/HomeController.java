@@ -1,9 +1,14 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
+
 import fr.eni.ecole.projet.trocencheres.bo.*;
+
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
 import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+
+import fr.eni.ecole.projet.trocencheres.bo.Adresse;
+import fr.eni.ecole.projet.trocencheres.bo.Categorie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.sql.SQLException;
+
 import java.util.List;
 
 @Controller
@@ -178,13 +184,29 @@ public class HomeController {
         return "redirect:/";
     }
 
+
     @PostMapping("/auction/cancel")
-    public String cancelAuction(int id, Principal principal, Model model){
+    public String cancelAuction(int id, Principal principal, Model model) {
         String username = principal != null ? principal.getName() : null;
         if (username == null) return "redirect:/login";
         boolean ok = articleAVendreService.cancelAuction(id, username);
         // redirect back to details with a query param indicating result
         return "redirect:/auction-details?id=" + id + (ok ? "&cancelled=1" : "&cancelled=0");
+    }
+
+    @RequestMapping(value="/modif-sale", method = RequestMethod.POST)
+    public String updateArticleAVendre(@ModelAttribute ArticleAVendre article, Principal principal, HttpServletRequest request){
+        if(principal == null){
+            return "redirect:/login";
+        }
+
+        try{
+            articleAVendreService.updateArticleAVendre(article);
+            return "redirect:/";
+        }catch(RuntimeException e){
+            return "redirect:/error" + e.getMessage();
+        }
+
     }
 
 

@@ -138,7 +138,7 @@ public class ArticleAVendreRepository {
     }
 
     public int updateArticleAVendre(ArticleAVendre article) {
-        return jdbc.update("update ARTICLES_A_VENDRE set nom_article = ?, description = ?, date_debut_encheres = ?, date_fin_encheres = ?, prix_initial = ? where no_article = ?",
-                article.getNomArticle(), article.getDescription(), article.getDateDebutEncheres(), article.getDateFinEncheres(), article.getPrixInitial(), article.getNoArticle());
+        return jdbc.update("update ARTICLES_A_VENDRE set nom_article = ?, description = ?, date_debut_encheres = ?, date_fin_encheres = ?, prix_initial = ?, no_adresse_retrait = ? where no_article = ?",
+                article.getNomArticle(), article.getDescription(), article.getDateDebutEncheres(), article.getDateFinEncheres(), article.getPrixInitial(),article.getNoAdresseRetrait(), article.getNoArticle());
     }
 }
