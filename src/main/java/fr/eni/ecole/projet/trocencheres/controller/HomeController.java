@@ -1,16 +1,11 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
-
 import fr.eni.ecole.projet.trocencheres.bo.*;
-
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
 import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.sql.SQLException;
-
 import java.util.List;
 
 @Controller
@@ -44,7 +38,7 @@ public class HomeController {
                         @RequestParam(value = "view", required = false) String view,
                         @RequestParam(value = "status", required = false) Integer status,
                         Principal principal,
-                        Model model){
+                        Model model) {
 
         List<ArticleAVendre> lstArticles;
         String username = principal != null ? principal.getName() : null;
@@ -129,7 +123,9 @@ public class HomeController {
 
     @PostMapping("/bid")
     public String bid(int id, @RequestParam(name = "inputPrice", required = true) int amount, Principal principal) {
-        if (principal == null) {return "redirect:/";}
+        if (principal == null) {
+            return "redirect:/";
+        }
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
         Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
         int oldCredit = bidder.getCredit();
@@ -155,9 +151,8 @@ public class HomeController {
         return String.format("redirect:/auction-details?id=%d", id);
     }
 
-
     @GetMapping("/sale/add-sale")
-    public String addSale(Model  model, Principal principal){
+    public String addSale(Model model, Principal principal) {
         //Retrieving my logged-in username
         String username = principal != null ? principal.getName() : null;
         UserProfile profile = null;
@@ -167,7 +162,7 @@ public class HomeController {
         ArticleAVendre article = new ArticleAVendre();
 
         //Retrieving my logged in user's address
-        if(profile != null && profile.getAdresse() != null){
+        if (profile != null && profile.getAdresse() != null) {
             article.setNoAdresseRetrait(profile.getAdresse().getNoAdresse());
         }
         model.addAttribute("profile", profile);
@@ -178,16 +173,14 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/sale/add-sale", method = RequestMethod.POST)
-    public String createArticle(@ModelAttribute ArticleAVendre article, Principal principal, HttpServletRequest request){
-        if(principal == null){
-            return "redirect:/login";
+    public String createArticle(@ModelAttribute ArticleAVendre article, Principal principal, HttpServletRequest request) {
+        if (principal == null) {
+            return "redirect:user/login";
         }
 
         articleAVendreService.createArticle(article, principal.getName());
         return "redirect:/";
     }
-
-
 
     @PostMapping("/auction/cancel")
     public String cancelAuction(int id, Principal principal, Model model) {
@@ -200,13 +193,13 @@ public class HomeController {
 
 
     @PostMapping("/sale/modif-sale")
-    public String updateArticleAVendre(@ModelAttribute ArticleAVendre article, Principal principal,@RequestParam("id") int id){
+    public String updateArticleAVendre(@ModelAttribute ArticleAVendre article, Principal principal, @RequestParam("id") int id) {
 
-        if(principal == null){
+        if (principal == null) {
             return "redirect:/login";
         }
 
-        try{
+        try {
 
             articleAVendreService.updateArticleAVendre(article);
 
@@ -214,21 +207,21 @@ public class HomeController {
             articleAVendreService.updateArticleAVendre(article);
 
             return "redirect:/";
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             return "redirect:/error" + e.getMessage();
         }
 
     }
 
     @GetMapping("/sale/modif-sale")
-    public String editArticle(@RequestParam("id") int id, Model model, Principal principal){
-        if(principal == null){
+    public String editArticle(@RequestParam("id") int id, Model model, Principal principal) {
+        if (principal == null) {
             return "redirect:/login";
         }
 
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
 
-        if(article == null) {
+        if (article == null) {
             return "redirect:/index";
         }
 

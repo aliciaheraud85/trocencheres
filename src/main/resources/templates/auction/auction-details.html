@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Détails vente</title>
+    <title th:text="#{auction.title}"></title>
     <link rel="stylesheet" data-th-href="@{/css/auction-details.css}">
 </head>
 <body>
@@ -16,38 +16,38 @@
                     <div class="col-md-2"></div>
                     <div class="col-md-2"></div>
                     <div class="col-md-4 text-center mt-2">
-                        <h1>Détails d'une vente</h1>
+                        <h1 th:text="#{auction.h1}"></h1>
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
-                        <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
+                        <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
                         <!-- Change to display user name when logged in -->
-                        <p>Participant : Username</p>
+                        <p><span th:text="#{auction.participant}+" />Username</p>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-2"></div>
                     <div class="col-md-4">
-                        <p>Article : <span th:text="${article.nomArticle}"></span></p>
-                        <p>Catégorie : <span th:text="${categorie.libelle}"></span></p>
-                        <p>Description : <span th:text="${article.description}"></span></p>
-                        <p>Retrait : <span th:text="${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span></p>
-                        <p>Vendeur : <span th:text="${article.idUtilisateur}"></span></p>
+                        <p><span th:text="#{auction.article}+${article.nomArticle}"></span></p>
+                        <p><span th:text="#{auction.category}+${categorie.libelle}"></span></p>
+                        <p><span th:text="#{auction.description}+${article.description}"></span></p>
+                        <p><span th:text="#{auction.takeOut}+${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span></p>
+                        <p><span th:text="#{auction.seller}+${article.idUtilisateur}"></span></p>
                     </div>
                     <div class="col-md-4">
-                        <p>Mise à prix : <span th:text="${article.prixInitial}"></span></p>
-                        <p th:if="${param.status == 'bid_placed'}">Enchère placée avec succès.</p>
-                        <p>Meilleure offre : <span th:text="${article.prixVente}"></span> </p>
-                        <p>Acquéreur : <span th:text="${highestBidder}" /></p>
-                        <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
+                        <p><span th:text="#{auction.startingPrice}+${article.prixInitial}"></span></p>
+                        <p th:if="${param.status == 'bid_placed'}" th:text="#{auction.success}">Enchère placée avec succès.</p>
+                        <p><span th:text="#{auction.price}+${article.prixVente}"></span> </p>
+                        <p><span th:text="#{auction.bidder}++${highestBidder}" /></p>
+                        <p><span th:text="#{auction.endDate}+${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
                         <form
                                 th:action="@{/bid(id=${article.noArticle})}"
                                 th:if="${article.statutEnchere == 1 && userCredit > article.prixVente && article.statutEnchere == 1}"
                                 method="POST">
 
-                            <label for="inputPrice">Montant de votre enchère</label>
-                            <input id="inputPrice" type="number" name="inputPrice">
-                            <button type="submit">Enchérir</button>
+                            <label for="inputPrice" ></label>
+                            <input id="inputPrice" type="number" name="inputPrice" th:text="#{auction.amount}">
+                            <button type="submit" th:text="#{auction.bid}"></button>
                         </form>
                     </div>
                     <div class="col-md-2"></div>
@@ -56,16 +56,16 @@
                 <div class="row mt-3 mb-5 align-items-center">
                     <div class="col-md-2"></div>
                     <div class="col-md-4 d-flex justify-content-center">
-                        <a href="/" class="btn btn-outline-secondary py-2 px-3">Retour</a>
+                        <a href="/" class="btn btn-outline-secondary py-2 px-3" th:text="${auction.return}"></a>
                         <div style="margin-left:10px;">
                             <div th:if="${article.statutEnchere == 100}">
-                                <button class="btn btn-secondary" disabled>Annulé</button>
+                                <button class="btn btn-secondary" disabled th:text="${auction.cancelled}"></button>
                             </div>
                             <div th:if="${article.statutEnchere != 100}">
                                 <div th:if="${canCancel}">
                                     <form th:action="@{/auction/cancel}" method="post" th:object="${article}">
                                         <input type="hidden" name="id" th:value="${article.noArticle}" />
-                                        <button type="submit" class="btn btn-danger">Annuler la vente</button>
+                                        <button type="submit" class="btn btn-danger" th:text="${auction.cancel}"></button>
                                     </form>
                                 </div>
                             </div>

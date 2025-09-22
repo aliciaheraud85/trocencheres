@@ -5,12 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-<<<<<<<< HEAD:src/main/resources/templates/sale/add-sale.html
-    <title>Nouvelle vente</title>
-========
     <title th:text="#{create.title}"></title>
     <link rel="stylesheet" data-th-href="@{/css/auction-details.css}">
->>>>>>>> a95c367 (Add en & fr languages for index, auction details, create auction and 401 page):src/main/resources/templates/auction/add-sale.html
 </head>
 <body>
 <main class="center-main">
@@ -66,7 +62,7 @@
                             <div class="col-md-8 mb-5">
                                 <label for="adresse" class="form-label" th:text="#{create.address}"></label>
                                 <select class="form-select" id="adresse" th:field="*{noAdresseRetrait}" required>
-                                    <option value="1">Sélectionner</option>
+                                    <option value="1" th:text="#{create.select}"></option>
                                     <option th:each="adresses : ${adresse}"
                                             th:value="${adresses.noAdresse}"
                                             th:text="${adresses.rue + ' ' + adresses.codePostal + ' ' + adresses.ville}">
@@ -79,7 +75,7 @@
                                     <button type="submit" class="btn btn-primary" th:text="#{create.save}"></button>
                                 </div>
                                 <div class="col-md-4 d-flex justify-content-center">
-                                    <a href="" class="btn btn-outline-secondary">Annuler la vente</a>
+                                    <a href="" class="btn btn-outline-secondary" th:text="#{create.cancelAuction}"></a>
                                 </div>
                                 <div class="col-md-4 d-flex justify-content-start">
                                     <a href="" class="btn btn-outline-secondary" th:text="#{create.cancel}"></a>
