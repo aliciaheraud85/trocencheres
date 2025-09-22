@@ -1,7 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.Enchere;
-import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class EnchereRepository {
@@ -31,6 +31,13 @@ public class EnchereRepository {
         }
     };
 
+    private static final RowMapper<String> MAPPER_PSEUDO = new RowMapper<String>() {
+        @Override
+        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return rs.getString("id_utilisateur");
+        }
+    };
+
     public List<Enchere> findByArticleId(int articleId) {
         return jdbc.query("select * from ENCHERES where no_article = ? order by date_enchere desc", MAPPER, articleId);
     }
@@ -42,6 +49,10 @@ public class EnchereRepository {
     public int createEnchere(Enchere bid) {
         String queryString = "INSERT INTO ENCHERES(id_utilisateur, no_article, montant_enchere, date_enchere) VALUES (?, ?, ?, ?)";
         return jdbc.update(queryString, bid.getIdUtilisateur(), bid.getNoArticle(), bid.getMontantEnchere(), bid.getDateEnchere());
+    }
+
+    public Optional<String> findLastBidderUsername(int articleId) {
+        return jdbc.query("select TOP 1 id_utilisateur from ENCHERES where no_article = ? order by date_enchere desc", MAPPER_PSEUDO, articleId).stream().findFirst();
     }
 
 }

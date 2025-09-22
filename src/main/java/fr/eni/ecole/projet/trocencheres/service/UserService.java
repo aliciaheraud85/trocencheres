@@ -87,12 +87,20 @@ public class UserService {
         return (addrUpdated > 0 || userUpdated > 0);
     }
 
-    public void debitBidder(Utilisateur bidder, int amount) throws SQLException {
+    public boolean debitBidder(Utilisateur bidder, int amount) throws SQLException {
         bidder.setCredit(bidder.getCredit() - amount);
         int success = utilisateurRepository.updateCredit(bidder);
         if (success == 0) {
             throw new SQLException("database enchere insert failed");
         }
+        return true;
     }
 
+    public void updateUserCredit(Utilisateur user, int credit) throws SQLException {
+        user.setCredit(credit);
+        int success = utilisateurRepository.updateUtilisateur(user);
+        if (success == 0) {
+            throw new SQLException("database utilisateur update failed");
+        }
+    }
 }

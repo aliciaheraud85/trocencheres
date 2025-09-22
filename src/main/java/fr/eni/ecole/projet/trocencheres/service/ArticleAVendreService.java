@@ -1,15 +1,12 @@
 package fr.eni.ecole.projet.trocencheres.service;
 
-import fr.eni.ecole.projet.trocencheres.bo.Adresse;
-import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
-import fr.eni.ecole.projet.trocencheres.repository.CategorieRepository;
+import fr.eni.ecole.projet.trocencheres.bo.*;
+import fr.eni.ecole.projet.trocencheres.repository.*;
+import org.springframework.expression.spel.ast.OpPlus;
 import org.springframework.stereotype.Service;
-import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
-
-import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +16,17 @@ public class ArticleAVendreService {
     private final ArticleAVendreRepository articleRepository;
     private final CategorieRepository categorieRepository;
     private final AdresseRepository adresseRepository;
+    private final EnchereRepository enchereRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final UtilisateurService utilisateurService;
     private final UserService userService;
 
-    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, UtilisateurService utilisateurService, UserService userService) {
+    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, EnchereRepository enchereRepository, UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService, UserService userService) {
         this.articleRepository = articleRepository;
         this.categorieRepository = categorieRepository;
         this.adresseRepository = adresseRepository;
+        this.enchereRepository = enchereRepository;
+        this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService = utilisateurService;
         this.userService = userService;
     }
@@ -109,5 +110,27 @@ public class ArticleAVendreService {
         article.setIdUtilisateur(username);
         article.setStatutEnchere(0);
         return articleRepository.createArticleAVendre(article);
+    }
+
+    public void createEnchere(Utilisateur bidder, int id, int amount) throws SQLException {
+        Enchere bid = new Enchere(bidder.getPseudo(), id, amount, LocalDateTime.now());
+        int success = enchereRepository.createEnchere(bid);
+        if (success == 0) {
+            throw new SQLException("database enchere insert failed");
+        }
+    }
+
+    public Utilisateur getHighestBidder(int articleId) {
+        Optional<Utilisateur> user = utilisateurRepository.findLastBidder(articleId);
+        return user.orElse(null);
+    }
+
+    public String getHighestBidderUsername(int articleId) throws SQLException {
+        Optional<String> result = enchereRepository.findLastBidderUsername(articleId);
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new SQLException("Bidder not found");
+        }
     }
 }

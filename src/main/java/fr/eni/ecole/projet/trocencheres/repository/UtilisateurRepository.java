@@ -1,6 +1,5 @@
 package fr.eni.ecole.projet.trocencheres.repository;
 
-import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,7 +56,6 @@ public class UtilisateurRepository {
     }
 
     public Optional<Utilisateur> findLastBidder(int articleId) {
-        //FIXME: PreparedStatementCallback; SQL [select * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = articleId order by date_enchere desc]; L'index 1 est hors limites.
         return jdbc.query("select TOP 1 * from ENCHERES left join UTILISATEURS as u on u.pseudo = id_utilisateur where no_article = ? order by date_enchere desc", MAPPER, articleId).stream().findFirst();
     }
 

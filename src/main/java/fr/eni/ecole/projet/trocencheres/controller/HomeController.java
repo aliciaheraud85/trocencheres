@@ -1,9 +1,6 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
 import fr.eni.ecole.projet.trocencheres.bo.*;
-import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
-import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
-import fr.eni.ecole.projet.trocencheres.repository.EnchereRepository;
 import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -24,16 +21,12 @@ public class HomeController {
 
     private final ArticleAVendreService articleAVendreService;
     private final UserService userService;
-    private final EnchereService enchereService;
     private final UtilisateurService utilisateurService;
-    private final AdresseService adresseService;
 
-    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService, EnchereService enchereService, AdresseService adresseService) {
+    public HomeController(ArticleAVendreService articleAVendreService, UtilisateurService utilisateurService, UserService userService) {
         this.articleAVendreService = articleAVendreService;
         this.userService = userService;
-        this.enchereService = enchereService;
         this.utilisateurService = utilisateurService;
-        this.adresseService = adresseService;
     }
 
     @GetMapping("/")
@@ -101,6 +94,14 @@ public class HomeController {
                 model.addAttribute("article", articleById);
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
+                if (articleById.isOnSale() && articleById.getPrixVente() > 0) {
+                    try {
+                        String highestBidder = articleAVendreService.getHighestBidderUsername(id);
+                        model.addAttribute("highestBidder", highestBidder);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return "auction-details";
             } else {
                 System.out.println("This article does not exist");
@@ -117,20 +118,23 @@ public class HomeController {
         if (principal == null) {return "redirect:/";}
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
         Utilisateur bidder = userService.getUserProfile(principal.getName()).getUtilisateur();
+        int oldCredit = bidder.getCredit();
 
         if (article.isOnSale() && article.isValidBid(amount)) {
             try {
-                if (article.getPrixVente() != 0) {
-                    utilisateurService.creditOldBidder(article.getNoArticle(), article.getPrixVente());
+                boolean bidderDebited = userService.debitBidder(bidder, amount);
+                if (article.getPrixVente() != 0 && bidderDebited) {
+                    boolean oldBidderCredited = utilisateurService.creditOldBidder(article.getNoArticle(), article.getPrixVente());
+                    if (!oldBidderCredited) {
+                        userService.updateUserCredit(bidder, oldCredit);
+                        return "redirect:/auction-details?error";
+                    }
                 }
-                userService.debitBidder(bidder, amount);
-                enchereService.createEnchere(bidder, id, amount);
+                articleAVendreService.createEnchere(bidder, id, amount);
                 articleAVendreService.updateArticlePrice(article, amount);
                 return String.format("redirect:/auction-details?id=%d&status=bid_placed", id);
             } catch (SQLException e) {
-                System.out.println("warning");
                 System.out.println(e.getMessage());
-                System.out.println("warning");
                 return "redirect:/auction-details?error";
             }
         }
