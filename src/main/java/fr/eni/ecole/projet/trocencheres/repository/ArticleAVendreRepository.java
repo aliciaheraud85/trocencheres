@@ -131,4 +131,8 @@ public class ArticleAVendreRepository {
         }
         return jdbc.query("select * from ARTICLES_A_VENDRE where id_utilisateur = ? and statut_enchere = ?", MAPPER, sellerId, statutEnchere);
     }
+
+    public int cancelArticle(int articleId) {
+        return jdbc.update("update ARTICLES_A_VENDRE set statut_enchere = ? where no_article = ?", 100, articleId);
+    }
 }

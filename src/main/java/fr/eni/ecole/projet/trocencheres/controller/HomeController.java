@@ -95,6 +95,11 @@ public class HomeController {
                 model.addAttribute("categorie", categorie);
                 model.addAttribute("adresse", adresse);
                 model.addAttribute("status", status);
+                // provide current user and canCancel flag for template
+                String currentUser = principal != null ? principal.getName() : null;
+                boolean canCancel = currentUser != null && articleAVendreService.isCancelable(id, currentUser);
+                model.addAttribute("currentUser", currentUser);
+                model.addAttribute("canCancel", canCancel);
                 if (articleById.isOnSale() && articleById.getPrixVente() > 0) {
                     try {
                         String highestBidder = articleAVendreService.getHighestBidderUsername(id);
@@ -171,6 +176,15 @@ public class HomeController {
 
         articleAVendreService.createArticle(article, principal.getName());
         return "redirect:/";
+    }
+
+    @PostMapping("/auction/cancel")
+    public String cancelAuction(int id, Principal principal, Model model){
+        String username = principal != null ? principal.getName() : null;
+        if (username == null) return "redirect:/login";
+        boolean ok = articleAVendreService.cancelAuction(id, username);
+        // redirect back to details with a query param indicating result
+        return "redirect:/auction-details?id=" + id + (ok ? "&cancelled=1" : "&cancelled=0");
     }
 
 

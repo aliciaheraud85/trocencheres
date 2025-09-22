@@ -63,6 +63,30 @@ public class ArticleAVendreService {
         return articleRepository.findBySellerAndStatus(sellerId, statutEnchere);
     }
 
+    public boolean cancelAuction(int articleId, String sellerId) {
+        ArticleAVendre article = getArticleAVendre(articleId);
+        if (article == null) return false;
+        // Only seller can cancel
+        if (!sellerId.equals(article.getIdUtilisateur())) return false;
+        // Do not cancel if already canceled
+        if (article.getStatutEnchere() == 100) return false;
+        // Can cancel only if dateDebutEncheres is in the future (not started)
+        if (article.getDateDebutEncheres() != null && article.getDateDebutEncheres().isAfter(java.time.LocalDate.now())) {
+            int updated = articleRepository.cancelArticle(articleId);
+            return updated > 0;
+        }
+        return false;
+    }
+
+    public boolean isCancelable(int articleId, String sellerId) {
+        ArticleAVendre article = getArticleAVendre(articleId);
+        if (article == null) return false;
+        if (!sellerId.equals(article.getIdUtilisateur())) return false;
+        // Not cancelable if already canceled
+        if (article.getStatutEnchere() == 100) return false;
+        return article.getDateDebutEncheres() != null && article.getDateDebutEncheres().isAfter(java.time.LocalDate.now());
+    }
+
     public List<Categorie> getCategoriesList(){
         return categorieRepository.findAll();
     }
