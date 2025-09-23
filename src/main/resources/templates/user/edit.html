@@ -2,55 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Modifier profil</title>
+    <title th:text="#{editProfile.title}"></title>
 </head>
 <body>
 <div class="container">
-    <h1>Modifier mon profil</h1>
+    <h1 th:text="#{editProfile.h1}"></h1>
 
     <form th:action="@{/user/profile/save}" th:object="${profile}" method="post">
         <div>
-            <label>Pseudo:</label>
+            <label th:text="#{userForm.label.username}"></label>
             <input type="text" th:field="*{utilisateur.pseudo}" readonly />
         </div>
         <div>
-            <label>Nom:</label>
+            <label th:text="#{userForm.label.lastName}"></label>
             <input type="text" th:field="*{utilisateur.nom}" />
         </div>
         <div>
-            <label>Prénom:</label>
+            <label th:text="#{userForm.label.firstName}"></label>
             <input type="text" th:field="*{utilisateur.prenom}" />
         </div>
         <div>
-            <label>Email:</label>
+            <label th:text="#{userForm.label.email}"></label>
             <input type="email" th:field="*{utilisateur.email}" />
         </div>
         <div>
-            <label>Téléphone:</label>
+            <label th:text="#{userForm.label.phone}"></label>
             <input type="text" th:field="*{utilisateur.telephone}" />
         </div>
         <div>
-            <label>Mot de passe (laisser vide pour ne pas changer):</label>
+            <label th:text="#{editProfile.inputPassword}"></label>
             <input type="password" th:field="*{utilisateur.motDePasse}" />
         </div>
 
-        <h3>Adresse</h3>
+        <h3 th:text="#{userForm.h3.address}"></h3>
         <div>
-            <label>Rue:</label>
+            <label th:text="#{userForm.label.street}"></label>
             <input type="text" th:field="*{adresse.rue}" />
         </div>
         <div>
-            <label>Code postal:</label>
+            <label th:text="#{userForm.label.postalCode}"></label>
             <input type="text" th:field="*{adresse.codePostal}" />
         </div>
         <div>
-            <label>Ville:</label>
+            <label th:text="#{userForm.label.city}"></label>
             <input type="text" th:field="*{adresse.ville}" />
         </div>
 
         <div>
-            <button type="submit">Enregistrer</button>
-            <a th:href="@{/user/profile}">Annuler</a>
+            <button type="submit" th:text="#{userForm.save}"></button>
+            <a th:href="@{/user/profile}" th:text="#{userForm.cancel}"></a>
         </div>
     </form>
 </div>

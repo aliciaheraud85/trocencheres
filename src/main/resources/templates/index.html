@@ -73,7 +73,7 @@
                                       <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid">
                                   </div>
                                   <div class="col-md-8">
-                                      <p><span th:text="#{home.price}" /><span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente}"></span><span th:text="#{home.credits}" /></p>
+                                      <p><span th:text="#{home.price}" /><span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente + ' '}"></span><span th:text="#{home.credits}" /></p>
                                       <p><span th:text="#{home.auctionEnd}" /><span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
                                       <p><span th:text="#{home.seller}" /><a href="" th:text="${article.idUtilisateur}"></a></p>
                                   </div>

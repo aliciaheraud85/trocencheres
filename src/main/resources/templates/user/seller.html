@@ -2,41 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Profil Vendeur</title>
+    <title th:text="#{seller.title}"></title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
 <div class="container">
-    <h1>Profil Vendeur</h1>
+    <h1 th:text="#{seller.h1}"></h1>
 
     <div th:if="${profile.vendeur} == null">
-        <p>Aucun vendeur trouvé.</p>
+        <p th:text="#{seller.notFound}"></p>
     </div>
 
     <div th:if="${profile.vendeur} != null">
-        <h2>Informations vendeur</h2>
+        <h2 th:text="#{seller.h2.userInfos}"></h2>
         <ul>
-            <li>Pseudo: <span th:text="${profile.vendeur.pseudo}"></span></li>
-            <li>Nom: <span th:text="${profile.vendeur.nom}"></span></li>
-            <li>Prénom: <span th:text="${profile.vendeur.prenom}"></span></li>
-            <li>Email: <span th:text="${profile.vendeur.email}"></span></li>
-            <li>Téléphone: <span th:text="${profile.vendeur.telephone}"></span></li>
-            <li>Crédit: <span th:text="${profile.vendeur.credit}"></span></li>
+            <li><span th:text="#{userProfile.username}"></span><span th:text="${profile.vendeur.pseudo}"></span></li>
+            <li><span th:text="#{userProfile.lastName}"></span><span th:text="${profile.vendeur.nom}"></span></li>
+            <li><span th:text="#{userProfile.firstName}"></span><span th:text="${profile.vendeur.prenom}"></span></li>
+            <li><span th:text="#{userProfile.email}"></span><span th:text="${profile.vendeur.email}"></span></li>
+            <li><span th:text="#{userProfile.phone}"></span><span th:text="${profile.vendeur.telephone}"></span></li>
+            <li><span th:text="#{userProfile.credits}"></span><span th:text="${profile.vendeur.credit}"></span></li>
         </ul>
 
-        <h2>Article en vente</h2>
+        <h2 th:text="#{seller.h2.auctions}"></h2>
         <div th:if="${profile.article} == null">
-            <p>Aucun article trouvé pour ce vendeur.</p>
+            <p th:text="#{seller.noAuctions}"></p>
         </div>
         <div th:if="${profile.article} != null">
             <h3 th:text="${profile.article.nomArticle}"></h3>
             <p th:text="${profile.article.description}"></p>
             <ul>
-                <li>No article: <span th:text="${profile.article.noArticle}"></span></li>
-                <li>Prix initial: <span th:text="${profile.article.prixInitial}"></span></li>
-                <li>Prix vente: <span th:text="${profile.article.prixVente}"></span></li>
-                <li>Date début: <span th:text="${profile.article.dateDebutEncheres}"></span></li>
-                <li>Date fin: <span th:text="${profile.article.dateFinEncheres}"></span></li>
+<!--                <li>No article: <span th:text="${profile.article.noArticle}"></span></li>-->
+                <li><span th:text="#{seller.auction.startingPrice}"></span><span th:text="${profile.article.prixInitial}"></span></li>
+                <li><span th:text="#{seller.auction.currentPrice}"></span><span th:text="${profile.article.prixVente}"></span></li>
+                <li><span th:text="#{seller.auction.startDate}"></span><span th:text="${profile.article.dateDebutEncheres}"></span></li>
+                <li><span th:text="#{seller.auction.endDate}"></span><span th:text="${profile.article.dateFinEncheres}"></span></li>
             </ul>
         </div>
     </div>
