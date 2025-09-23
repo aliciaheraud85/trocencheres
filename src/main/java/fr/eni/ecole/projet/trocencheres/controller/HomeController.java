@@ -1,9 +1,16 @@
 package fr.eni.ecole.projet.trocencheres.controller;
 
+
 import fr.eni.ecole.projet.trocencheres.bo.*;
+
 import fr.eni.ecole.projet.trocencheres.dto.UserProfile;
 import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+
+import fr.eni.ecole.projet.trocencheres.bo.Adresse;
+import fr.eni.ecole.projet.trocencheres.bo.Categorie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.sql.SQLException;
+
 import java.util.List;
 
 @Controller
@@ -62,7 +70,7 @@ public class HomeController {
             lstArticles = articleAVendreService.getAuctionList(categoryId, q);
         }
         model.addAttribute("articles", lstArticles);
-
+        model.addAttribute("profile", username);
         List<Categorie> lstCategories = articleAVendreService.getCategoriesList();
         model.addAttribute("categories", lstCategories);
         model.addAttribute("selectedCategoryId", categoryId);
@@ -147,7 +155,8 @@ public class HomeController {
         return String.format("redirect:/auction-details?id=%d", id);
     }
 
-    @GetMapping("/add-sale")
+
+    @GetMapping("/sale/add-sale")
     public String addSale(Model  model, Principal principal){
         //Retrieving my logged-in username
         String username = principal != null ? principal.getName() : null;
@@ -165,10 +174,10 @@ public class HomeController {
         model.addAttribute("article", article);
         model.addAttribute("categories", articleAVendreService.getCategoriesList());
         model.addAttribute("adresse", articleAVendreService.getAdresseList());
-        return "add-sale";
+        return "sale/add-sale";
     }
 
-    @RequestMapping(value = "/add-sale", method = RequestMethod.POST)
+    @RequestMapping(value = "/sale/add-sale", method = RequestMethod.POST)
     public String createArticle(@ModelAttribute ArticleAVendre article, Principal principal, HttpServletRequest request){
         if(principal == null){
             return "redirect:/login";
@@ -178,13 +187,57 @@ public class HomeController {
         return "redirect:/";
     }
 
+
+
     @PostMapping("/auction/cancel")
-    public String cancelAuction(int id, Principal principal, Model model){
+    public String cancelAuction(int id, Principal principal, Model model) {
         String username = principal != null ? principal.getName() : null;
         if (username == null) return "redirect:/login";
         boolean ok = articleAVendreService.cancelAuction(id, username);
         // redirect back to details with a query param indicating result
         return "redirect:/auction-details?id=" + id + (ok ? "&cancelled=1" : "&cancelled=0");
+    }
+
+
+    @PostMapping("/sale/modif-sale")
+    public String updateArticleAVendre(@ModelAttribute ArticleAVendre article, Principal principal,@RequestParam("id") int id){
+
+        if(principal == null){
+            return "redirect:/login";
+        }
+
+        try{
+
+            articleAVendreService.updateArticleAVendre(article);
+
+            article.setNoArticle(id);
+            articleAVendreService.updateArticleAVendre(article);
+
+            return "redirect:/";
+        }catch(RuntimeException e){
+            return "redirect:/error" + e.getMessage();
+        }
+
+    }
+
+    @GetMapping("/sale/modif-sale")
+    public String editArticle(@RequestParam("id") int id, Model model, Principal principal){
+        if(principal == null){
+            return "redirect:/login";
+        }
+
+        ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
+
+        if(article == null) {
+            return "redirect:/index";
+        }
+
+        model.addAttribute("article", article);
+        model.addAttribute("categories", articleAVendreService.getCategoriesList());
+        model.addAttribute("adresse", articleAVendreService.getAdresseList());
+
+
+        return "sale/modif-sale";
     }
 
 
