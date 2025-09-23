@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Nouvelle vente</title>
-    <link rel="stylesheet" data-th-href="@{/css/auction-details.css}">
 </head>
 <body>
 <main class="center-main">
@@ -28,7 +27,7 @@
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
-                    <form th:action="@{/add-sale}" method="post" th:object="${article}">
+                    <form th:action="@{/sale/add-sale}" method="post" th:object="${article}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="nomArticle" class="form-label">Article (*):</label>

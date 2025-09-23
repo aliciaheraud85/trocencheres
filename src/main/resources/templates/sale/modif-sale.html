@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
+					contentPage=~{:: .center-main})}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Modifier la vente</title>
+</head>
+<body>
+<main class="center-main">
+  <div class="container-fluid">
+    <div class="container">
+      <div class="row mt-3 mb-5">
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4 text-center mt-2">
+          <h1>Modifier la vente</h1>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
+          <p>Date du jour : <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
+          <!-- Change to display user name when logged in -->
+          <p th:if="${profile != null}">Participant : <span th:text="${profile.utilisateur.pseudo}"></span></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+          <form th:action="@{/sale/modif-sale(id=${article.noArticle})}" method="post" th:object="${article}">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nomArticle" class="form-label">Article (*):</label>
+                <input type="text" class="form-control" id="nomArticle" th:field="*{nomArticle}" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="prixInitial" class="form-label">Mise à prix (*):</label>
+                <input type="number" class="form-control" id="prixInitial" th:field="*{prixInitial}" required value="0">
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="categorie" class="form-label">Catégorie (*):</label>
+                <select class="form-select" id="categorie" th:field="*{noCategorie}" required>
+                  <option value="1">Sélectionner</option>
+                  <option th:each="categorie : ${categories}" th:value="${categorie.noCategorie}" th:text="${categorie.libelle}"></option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="dateDebutEncheres" class="form-label">Début de l'enchère (*):</label>
+                <input id="dateDebutEncheres" type="text" th:field="*{dateDebutEncheres}" class="form-control" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="description" class="form-label">Description (*):</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="3" required></textarea>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="dateFinEncheres" class="form-label">Fin de l'enchère (*):</label>
+                <input type="text" id="dateFinEncheres" class="form-control" th:field="*{dateFinEncheres}" required>
+              </div>
+              <div class="col-md-8 mb-5">
+                <label for="adresse" class="form-label">Retrait (*):</label>
+                <select class="form-select" id="adresse" th:field="*{noAdresseRetrait}" required>
+                  <option value="1">Sélectionner</option>
+                  <option th:each="adresses : ${adresse}"
+                          th:value="${adresses.noAdresse}"
+                          th:text="${adresses.rue + ' ' + adresses.codePostal + ' ' + adresses.ville}">
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-4 mb-5"></div>
+              <div class="row mb-5">
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>
