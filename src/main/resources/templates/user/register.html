@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
 					contentPage=~{:: .center-main})}">
 <head>
@@ -17,19 +16,19 @@
 
                 <form id="register-form" class="user-form" th:action="@{/register}" th:object="${signUpRequest}" method="post">
 
+                    <div class="grid-2" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                     <label class="grid-2" for="inputUsername" th:text="#{userForm.label.username}"></label>
-                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                     <input class="grid-2" id="inputUsername" type="text" name="username" th:field="*{username}" th:placeholder="#{userForm.placeHolder.username}" required/>
 
-                    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
                     <label class="grid-2" for="inputLastName" th:text="#{userForm.label.lastName}"></label>
                     <input class="grid-2" id="inputLastName" type="text" name="lastName" th:field="*{lastName}" th:placeholder="#{userForm.placeHolder.lastName}" required/>
 
-                    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
                     <label class="grid-2" for="inputFirstName" th:text="#{userForm.label.firstName}"></label>
                     <input class="grid-2" id="inputFirstName" type="text" name="firstName" th:field="*{firstName}" th:placeholder="#{userForm.placeHolder.firstName}" required/>
 
-                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     <label class="grid-2" for="inputEmail" th:text="#{userForm.label.email}"></label>
                     <input class="grid-2" id="inputEmail" type="text" name="email" th:field="*{email}" th:placeholder="#{userForm.placeHolder.email}" required/>
 
@@ -38,23 +37,27 @@
 
                     <h3 class="grid-2" th:text="#{userForm.h3.address}"></h3>
 
-                    <div th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div>
                     <label class="grid-2" for="street" th:text="#{userForm.label.street}"></label>
-                    <input class="grid-2" id="street" type="text" name="street" th:field="*{street}" th:placeholder="#{userForm.placeHolder.street}" required />
+                    <input class="grid-2" id="street" type="text" name="street" th:field="*{street}" th:placeholder="#{userForm.placeHolder.street}" />
 
-                    <div th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></div>
                     <label class="grid-2" for="postalCode" th:text="#{userForm.label.postalCode}"></label>
-                    <input class="grid-2" id="postalCode" type="text" name="postalCode" th:field="*{postalCode}" th:placeholder="#{userForm.placeHolder.postalCode}" required />
+                    <input class="grid-2" id="postalCode" type="text" name="postalCode" th:field="*{postalCode}" th:placeholder="#{userForm.placeHolder.postalCode}" />
 
-                    <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
                     <label class="grid-2" for="city" th:text="#{userForm.label.city}"></label>
-                    <input class="grid-2" id="city" type="text" name="city" th:field="*{city}" th:placeholder="#{userForm.placeHolder.city}" required />
+                    <input class="grid-2" id="city" type="text" name="city" th:field="*{city}" th:placeholder="#{userForm.placeHolder.city}" />
 
                     <br>
 
-                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                    <div class="grid-2" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                     <label class="grid-2" for="inputPassword" th:text="#{userForm.label.password}"></label>
                     <input class="grid-2" id="inputPassword" type="password" name="password" th:field="*{password}" th:placeholder="#{userForm.placeHolder.password}" required/>
+
+                    <span class="grid-2" id='confirm-message'></span>
+                    <label class="grid-2" for="inputConfirmation" th:text="#{userForm.label.confirmation}"></label>
+                    <input class="grid-2" id="inputConfirmation" type="password" name="confirmation" th:placeholder="#{userForm.placeHolder.confirmation}" required/>
 
                     <input class="grid-2" type="submit" value="Sign Up"/>
                 </form>
@@ -63,4 +66,7 @@
     </div>
 </main>
 </body>
+
+<script type="text/javascript" th:src="@{/script/passwordCheck.js}"></script>
+
 </html>
