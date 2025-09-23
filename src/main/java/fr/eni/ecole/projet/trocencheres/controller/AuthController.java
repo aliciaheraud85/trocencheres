@@ -48,12 +48,12 @@ public class AuthController {
         try {
             int id = utilisateurService.createUser(signUpRequest);
         } catch (DuplicateKeyException e) {
-            return "redirect:user/register?error";
+            return "redirect:/register?error";
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "redirect:user/register?error";
+            return "redirect:/register?error";
         }
-        return "redirect:user/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
@@ -71,7 +71,7 @@ public class AuthController {
         try {
             auth = utilisateurService.validate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (Exception e) {
-            return "redirect:user/login?error";
+            return "redirect:/login?error";
         }
 
         LoginResponse loginResponse = utilisateurService.createLoginResponse(auth, jwtService);

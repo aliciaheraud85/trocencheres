@@ -110,7 +110,7 @@ public class HomeController {
                         e.printStackTrace();
                     }
                 }
-                return "auction-details";
+                return "auction/auction-details";
             } else {
                 System.out.println("This article does not exist");
                 return "redirect:/index";
