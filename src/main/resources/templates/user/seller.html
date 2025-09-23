@@ -1,45 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
+					contentPage=~{:: .center-main})}">
+
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title th:text="#{seller.title}"></title>
-    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
-<div class="container">
-    <h1 th:text="#{seller.h1}"></h1>
+<main class="center-main">
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 text-center">
+                    <h1 th:text="#{seller.h1}"></h1>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
 
-    <div th:if="${profile.vendeur} == null">
-        <p th:text="#{seller.notFound}"></p>
-    </div>
+            <div th:if="${profile.vendeur} == null">
+                <div class="row mt-3">
+                    <div class="col-md-12 text-center">
+                        <p th:text="#{seller.notFound}"></p>
+                    </div>
+                </div>
+            </div>
 
-    <div th:if="${profile.vendeur} != null">
-        <h2 th:text="#{seller.h2.userInfos}"></h2>
-        <ul>
-            <li><span th:text="#{userProfile.username}"></span><span th:text="${profile.vendeur.pseudo}"></span></li>
-            <li><span th:text="#{userProfile.lastName}"></span><span th:text="${profile.vendeur.nom}"></span></li>
-            <li><span th:text="#{userProfile.firstName}"></span><span th:text="${profile.vendeur.prenom}"></span></li>
-            <li><span th:text="#{userProfile.email}"></span><span th:text="${profile.vendeur.email}"></span></li>
-            <li><span th:text="#{userProfile.phone}"></span><span th:text="${profile.vendeur.telephone}"></span></li>
-            <li><span th:text="#{userProfile.credits}"></span><span th:text="${profile.vendeur.credit}"></span></li>
-        </ul>
+            <div th:if="${profile.vendeur} != null">
+                <!-- Infos du vendeur -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h2 th:text="#{seller.h2.userInfos}"></h2>
+                        <ul>
+                            <li><span th:text="#{userProfile.username}"></span> <span th:text="${profile.vendeur.pseudo}"></span></li>
+                            <li><span th:text="#{userProfile.lastName}"></span> <span th:text="${profile.vendeur.nom}"></span></li>
+                            <li><span th:text="#{userProfile.firstName}"></span> <span th:text="${profile.vendeur.prenom}"></span></li>
+                            <li><span th:text="#{userProfile.email}"></span> <span th:text="${profile.vendeur.email}"></span></li>
+                            <li><span th:text="#{userProfile.phone}"></span> <span th:text="${profile.vendeur.telephone}"></span></li>
+                            <li><span th:text="#{userProfile.credits}"></span> <span th:text="${profile.vendeur.credit}"></span></li>
+                        </ul>
+                    </div>
+                </div>
 
-        <h2 th:text="#{seller.h2.auctions}"></h2>
-        <div th:if="${profile.article} == null">
-            <p th:text="#{seller.noAuctions}"></p>
-        </div>
-        <div th:if="${profile.article} != null">
-            <h3 th:text="${profile.article.nomArticle}"></h3>
-            <p th:text="${profile.article.description}"></p>
-            <ul>
-<!--                <li>No article: <span th:text="${profile.article.noArticle}"></span></li>-->
-                <li><span th:text="#{seller.auction.startingPrice}"></span><span th:text="${profile.article.prixInitial}"></span></li>
-                <li><span th:text="#{seller.auction.currentPrice}"></span><span th:text="${profile.article.prixVente}"></span></li>
-                <li><span th:text="#{seller.auction.startDate}"></span><span th:text="${profile.article.dateDebutEncheres}"></span></li>
-                <li><span th:text="#{seller.auction.endDate}"></span><span th:text="${profile.article.dateFinEncheres}"></span></li>
-            </ul>
-        </div>
-    </div>
-</div>
+                <!-- Liste des enchères du vendeur -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h2 th:text="#{seller.h2.auctions}"></h2>
+                    </div>
+                </div>
+
+                <div th:if="${profile.articles == null or #lists.isEmpty(profile.articles)}">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p th:text="#{seller.noAuctions}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" th:if="${profile.articles != null and !#lists.isEmpty(profile.articles)}">
+                    <div class="col-md-4 mb-3" th:each="article : ${profile.articles}">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg"
+                                             alt="Image de l'article" class="img-fluid">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p><span th:text="#{seller.auction.startingPrice}"></span> <span th:text="${article.prixInitial}"></span></p>
+                                        <p><span th:text="#{seller.auction.currentPrice}"></span> <span th:text="${article.prixVente}"></span></p>
+                                        <p><span th:text="#{seller.auction.startDate}"></span> <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span></p>
+                                        <p><span th:text="#{seller.auction.endDate}"></span> <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
+                                        <p th:text="${article.description}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- fin row articles -->
+                <a href="/" class="btn btn-outline-secondary py-2 px-3">Retour</a>
+            </div> <!-- fin profile.vendeur != null -->
+
+        </div> <!-- fin container -->
+
+    </div> <!-- fin container-fluid -->
+</main>
 </body>
 </html>

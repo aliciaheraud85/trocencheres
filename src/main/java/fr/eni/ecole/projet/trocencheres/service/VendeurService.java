@@ -21,16 +21,20 @@ public class VendeurService {
     }
 
     /**
-     * returns the first user which sells article in the page /vendeur/profil (take only the first for now just to have an overview)
+     * returns the user which sells article in the page /vendeur/profil
      */
-    public SellerProfil getFirstSellerProfil() {
-        List<ArticleAVendre> articles = articleRepository.findAll();
-        if (articles.isEmpty()) {
-            return new SellerProfil();
+    public SellerProfil getSellerProfil(String pseudo) {
+        Utilisateur seller = utilisateurRepository.findByPseudo(pseudo)
+                .orElse(null);
+        if (seller == null) {
+            return new SellerProfil(); // or throw exception
         }
 
-        ArticleAVendre a = articles.get(0);
-        Utilisateur seller = utilisateurRepository.findByPseudo(a.getIdUtilisateur()).orElse(null);
-        return new SellerProfil(seller, a);
+        // 2. Fetch all articles of this seller
+        List<ArticleAVendre> articles = articleRepository.findBySellerId(seller.getPseudo());
+
+        // 3. Return profile
+        return new SellerProfil(seller, articles);
     }
+
 }

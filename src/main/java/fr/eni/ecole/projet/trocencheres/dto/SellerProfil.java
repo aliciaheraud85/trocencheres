@@ -3,18 +3,20 @@ package fr.eni.ecole.projet.trocencheres.dto;
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 
+import java.util.List;
+
 public class SellerProfil {
     private Utilisateur seller;
-    private ArticleAVendre article;
+    private List<ArticleAVendre> articles;
 
     public SellerProfil() {}
-    public SellerProfil(Utilisateur vendeur, ArticleAVendre article) {
+    public SellerProfil(Utilisateur vendeur, List<ArticleAVendre> articles) {
         this.seller = vendeur;
-        this.article = article;
+        this.articles = articles;
     }
 
     public Utilisateur getVendeur() { return seller; }
     public void setVendeur(Utilisateur vendeur) { this.seller = vendeur; }
-    public ArticleAVendre getArticle() { return article; }
-    public void setArticle(ArticleAVendre article) { this.article = article; }
+    public List<ArticleAVendre> getArticles() { return articles; }
+    public void setArticles(List<ArticleAVendre> articles) { this.articles = articles; }
 }

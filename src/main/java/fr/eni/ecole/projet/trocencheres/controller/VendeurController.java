@@ -5,6 +5,7 @@ import fr.eni.ecole.projet.trocencheres.service.VendeurService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class VendeurController {
@@ -16,9 +17,10 @@ public class VendeurController {
     }
 
     @GetMapping("/vendeur/profil")
-    public String profil(Model model) {
-        SellerProfil profile = vendeurService.getFirstSellerProfil();
+    public String profil(@RequestParam String pseudo, Model model) {
+        SellerProfil profile = vendeurService.getSellerProfil(pseudo);
         model.addAttribute("profile", profile);
+        model.addAttribute("pseudo", pseudo);
         return "user/seller";
     }
 }
