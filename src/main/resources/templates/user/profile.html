@@ -2,40 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Mon profil</title>
+    <title th:text="#{userProfile.title}"></title>
 </head>
 <body>
 <div class="container">
-    <h1>Mon profil</h1>
+    <h1 th:text="#{userProfile.h1}"></h1>
 
     <div th:if="${profile.utilisateur} == null">
-        <p>Utilisateur introuvable.</p>
+        <p th:text="#{userProfile.notFound}"></p>
     </div>
 
     <div th:if="${profile.utilisateur} != null">
-        <h2>Informations personnelles</h2>
+        <h2 th:text="#{userProfile.h2.userInfos}"></h2>
         <ul>
-            <li>Pseudo: <span th:text="${profile.utilisateur.pseudo}"></span></li>
-            <li>Nom: <span th:text="${profile.utilisateur.nom}"></span></li>
-            <li>Prénom: <span th:text="${profile.utilisateur.prenom}"></span></li>
-            <li>Email: <span th:text="${profile.utilisateur.email}"></span></li>
-            <li>Téléphone: <span th:text="${profile.utilisateur.telephone}"></span></li>
-            <li>Crédit: <span th:text="${profile.utilisateur.credit}"></span></li>
+            <li><span th:text="#{userProfile.username}"></span><span th:text="${profile.utilisateur.pseudo}"></span></li>
+            <li><span th:text="#{userProfile.lastName}"></span><span th:text="${profile.utilisateur.nom}"></span></li>
+            <li><span th:text="#{userProfile.firstName}"></span><span th:text="${profile.utilisateur.prenom}"></span></li>
+            <li><span th:text="#{userProfile.email}"></span><span th:text="${profile.utilisateur.email}"></span></li>
+            <li><span th:text="#{userProfile.phone}"></span><span th:text="${profile.utilisateur.telephone}"></span></li>
+            <li><span th:text="#{userProfile.credits}"></span><span th:text="${profile.utilisateur.credit}"></span></li>
         </ul>
 
-        <h3>Adresse</h3>
+        <h3 th:text="#{userForm.h3.address}"></h3>
         <div th:if="${profile.adresse} == null">
-            <p>Aucune adresse renseignée.</p>
+            <p th:text="#{userProfile.noAddress}"></p>
         </div>
         <div th:if="${profile.adresse} != null">
             <ul>
-                <li>Rue: <span th:text="${profile.adresse.rue}"></span></li>
-                <li>Code postal: <span th:text="${profile.adresse.codePostal}"></span></li>
-                <li>Ville: <span th:text="${profile.adresse.ville}"></span></li>
+                <li><span th:text="#{userForm.label.street}"></span><span th:text="${profile.adresse.rue}"></span></li>
+                <li><span th:text="#{userForm.label.postalCode}"></span><span th:text="${profile.adresse.codePostal}"></span></li>
+                <li><span th:text="#{userForm.label.city}"></span><span th:text="${profile.adresse.ville}"></span></li>
             </ul>
         </div>
 
-        <p><a th:href="@{/user/profile/edit}">Modifier mon profil</a></p>
+        <p><a th:href="@{/user/profile/edit}" th:text="#{userProfile.modify}"></a></p>
     </div>
 </div>
 </body>

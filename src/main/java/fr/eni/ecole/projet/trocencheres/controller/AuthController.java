@@ -36,36 +36,36 @@ public class AuthController {
     private int jwtExpirationMs;
 
     @GetMapping("/register")
-    public String getRegisterForm(SignUpRequest signUpRequest) {
-        return "register";
+    public String getRegisterForm(@ModelAttribute("signUpRequest") SignUpRequest signUpRequest) {
+        return "user/register";
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public String register(@Valid @ModelAttribute("signUpRequest") SignUpRequest signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "register";
+            return "user/register";
         }
         try {
             int id = utilisateurService.createUser(signUpRequest);
         } catch (DuplicateKeyException e) {
-            return "redirect:register?error";
+            return "redirect:/register?error";
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "redirect:register?error";
+            return "redirect:/register?error";
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
-    public String getLoginForm(LoginRequest loginRequest) {
+    public String getLoginForm(@ModelAttribute("loginRequest") LoginRequest loginRequest) {
         if (isAuthenticated()) {
             return "redirect:/";
         }
-        return "login";
+        return "user/login";
     }
 
     @PostMapping("/login")
-    public String authenticate(@Valid LoginRequest loginRequest, HttpServletResponse response) {
+    public String authenticate(@Valid @ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletResponse response) {
 
         Authentication auth;
         try {
