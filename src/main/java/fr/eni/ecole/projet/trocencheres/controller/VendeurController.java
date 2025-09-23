@@ -19,6 +19,6 @@ public class VendeurController {
     public String profil(Model model) {
         SellerProfil profile = vendeurService.getFirstSellerProfil();
         model.addAttribute("profile", profile);
-        return "vendeur/profil";
+        return "user/seller";
     }
 }
