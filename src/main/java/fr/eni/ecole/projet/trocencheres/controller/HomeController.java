@@ -110,7 +110,7 @@ public class HomeController {
                         e.printStackTrace();
                     }
                 }
-                return "auction/auction-details";
+                return "sale/auction-details";
             } else {
                 System.out.println("This article does not exist");
                 return "redirect:/index";
@@ -177,7 +177,6 @@ public class HomeController {
         if (principal == null) {
             return "redirect:user/login";
         }
-
         articleAVendreService.createArticle(article, principal.getName());
         return "redirect:/";
     }
@@ -194,15 +193,11 @@ public class HomeController {
 
     @PostMapping("/sale/modif-sale")
     public String updateArticleAVendre(@ModelAttribute ArticleAVendre article, Principal principal, @RequestParam("id") int id) {
-
         if (principal == null) {
             return "redirect:/login";
         }
-
         try {
-
             articleAVendreService.updateArticleAVendre(article);
-
             article.setNoArticle(id);
             articleAVendreService.updateArticleAVendre(article);
 
@@ -210,7 +205,6 @@ public class HomeController {
         } catch (RuntimeException e) {
             return "redirect:/error" + e.getMessage();
         }
-
     }
 
     @GetMapping("/sale/modif-sale")
@@ -218,18 +212,13 @@ public class HomeController {
         if (principal == null) {
             return "redirect:/login";
         }
-
         ArticleAVendre article = articleAVendreService.getArticleAVendre(id);
-
         if (article == null) {
             return "redirect:/index";
         }
-
         model.addAttribute("article", article);
         model.addAttribute("categories", articleAVendreService.getCategoriesList());
         model.addAttribute("adresse", articleAVendreService.getAdresseList());
-
-
         return "sale/modif-sale";
     }
 
