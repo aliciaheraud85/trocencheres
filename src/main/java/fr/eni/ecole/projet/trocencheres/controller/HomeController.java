@@ -197,7 +197,6 @@ public class HomeController {
             return "redirect:/login";
         }
         try {
-            articleAVendreService.updateArticleAVendre(article);
             article.setNoArticle(id);
             articleAVendreService.updateArticleAVendre(article);
 
