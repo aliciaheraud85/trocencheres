@@ -1,12 +1,43 @@
 .no-decoration {
     color: black;
     text-decoration: none;
+    font-weight: bold;
 }
 
-.dateUser {
-    border: 1px solid black;
+.no-decoration:hover{
+    color: #757575;
 }
 
-.dateUser p {
-    font-size: 0.9em;
+.title1{
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 4em;
+}
+
+.center-main{
+    font-family: Inter, sans-serif;
+}
+
+.imgArticle{
+    border: 1px solid #757575;
+}
+
+@media screen and (max-width: 1400px){
+    .title1{
+        font-size: 3.5em;
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .title1{
+        font-size: 2.5em;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .title1{
+        font-size: 1.8em;
+    }
+    .cardUser{
+        font-size: 0.8em;
+    }
 }
