@@ -1,10 +1,10 @@
 function checkEquality(password, confirmation) {
     if (password === confirmation) {
         document.getElementById('confirm-message').style.color = 'green';
-        document.getElementById('confirm-message').innerHTML = 'matching';
+        document.getElementById('confirm-message').innerHTML = 'passwords matching ✓';
     } else {
         document.getElementById('confirm-message').style.color = 'red';
-        document.getElementById('confirm-message').innerHTML = 'not matching';
+        document.getElementById('confirm-message').innerHTML = 'passwords not matching';
     }
 }
 
@@ -27,10 +27,14 @@ const check = function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("password script loaded")
-    document.getElementById("#inputPassword").addEventListener("keyup", () => {
-        check()
-    })
-    document.getElementById("#inputConfirmation").addEventListener("keyup", () => {
-        check()
-    })
+    const inputPassword = document.getElementById("inputPassword");
+    const confirmation = document.getElementById("inputConfirmation");
+    if (inputPassword != null) {
+        inputPassword.addEventListener("keyup", () => {
+            check()
+        })
+        confirmation.addEventListener("keyup", () => {
+            check()
+        })
+    }
 })
