@@ -16,13 +16,16 @@
                     <div class="col-md-2"></div>
                     <div class="col-md-2"></div>
                     <div class="col-md-4 text-center mt-2">
-                        <h1 th:text="#{auction.h1}"></h1>
+                        <h1 th:text="#{auction.h1}" class="title1"></h1>
                     </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
-                        <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-                        <!-- Change to display username when logged in -->
-                        <p><span th:text="#{auction.participant}" /></p>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body cardUser">
+                                <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
+                                <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile}"></span></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -46,8 +49,8 @@
                                 method="POST">
 
                             <label for="inputPrice" ></label>
-                            <input id="inputPrice" type="number" name="inputPrice" th:text="#{auction.amount}">
-                            <button type="submit" th:text="#{auction.bid}"></button>
+                            <input id="inputPrice" type="number" name="inputPrice" class="form-control" th:text="#{auction.amount}">
+                            <button type="submit" class="btn btn-dark" th:text="#{auction.bid}"></button>
                         </form>
                     </div>
                     <div class="col-md-2"></div>

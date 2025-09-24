@@ -85,8 +85,10 @@ public class HomeController {
     public String auctionDetails(int id, @RequestParam(name = "status", required = false) String status, Principal principal, Model model) {
         int userCredit;
         if (principal != null) {
+            String username = principal != null ? principal.getName() : null;
             userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
             model.addAttribute("userCredit", userCredit);
+            model.addAttribute("profile", username);
         }
         if (id > 0) {
             ArticleAVendre articleById = articleAVendreService.getArticleAVendre(id);
