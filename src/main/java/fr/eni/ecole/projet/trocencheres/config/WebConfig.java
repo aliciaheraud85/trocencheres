@@ -1,21 +1,30 @@
 package fr.eni.ecole.projet.trocencheres.config;
 
+import fr.eni.ecole.projet.trocencheres.service.ArticleAVendreService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
+@EnableScheduling
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    private final ArticleAVendreService articleAVendreService;
+
+    public WebConfig(ArticleAVendreService articleAVendreService) {
+        this.articleAVendreService = articleAVendreService;
+    }
 
     @Bean
     public MessageSource messageSource() {
@@ -50,6 +59,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Scheduled(cron = "0 1 0 * * *", zone = "Europe/Paris")
+    public void updateAuctionsStatus() {
+        articleAVendreService.activateAuctions();
+        articleAVendreService.endAuctions();
     }
 
 }

@@ -159,4 +159,20 @@ public class ArticleAVendreService {
 
         }
     }
+
+    public void activateAuctions() {
+        List<ArticleAVendre> auctionStartingToday = articleRepository.findAuctionsStartingToday();
+        auctionStartingToday.forEach(article -> {
+            article.setStatutEnchere(1);
+            articleRepository.updateArticleAVendre(article);
+        });
+    }
+
+    public void endAuctions() {
+        List<ArticleAVendre> auctionEndingToday = articleRepository.findAuctionsStartingToday();
+        auctionEndingToday.forEach(article -> {
+            article.setStatutEnchere(2);
+            articleRepository.updateArticleAVendre(article);
+        });
+    }
 }
