@@ -12,6 +12,10 @@
     color: limegreen;
 }
 
+.warning {
+    color: darkgrey;
+}
+
 .error {
     color: orangered;
 }

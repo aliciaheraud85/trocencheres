@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       data-th-replace="~{layouts/layout :: principal-layout(titlePage=~{:: title},
 					contentPage=~{:: .center-main})}">
 
@@ -22,7 +23,7 @@
                     <div class="col-md-2"></div>
                     <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
                         <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-                        <p><span th:text="#{auction.participant}" th:if="${currentUser != null}"/></p>
+                        <p><span th:text="#{auction.participant}"  sec:authorize="isAuthenticated()"/></p>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -39,17 +40,20 @@
                         <p><span th:text="#{auction.price}+${article.prixVente}"></span> </p>
                         <p><span th:text="#{auction.bidder}+${highestBidder != null ? highestBidder : ''}" /></p>
                         <p><span th:text="#{auction.endDate}+${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
-                        <form
-                                th:action="@{/bid(id=${article.noArticle})}"
-                                th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
-                                method="POST">
+                        <div sec:authorize="isAuthenticated()">
+                            <form
+                                    th:action="@{/bid(id=${article.noArticle})}"
+                                    th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
+                                    method="POST">
 
-                            <label for="inputPrice" ></label>
-                            <input id="inputPrice" type="number" name="inputPrice" th:text="#{auction.amount}">
-                            <button type="submit" th:text="#{auction.bid}"></button>
-                        </form>
-                        <span class="error" th:unless="${article.statutEnchere == 1}" th:text="#{auction.notStarted}"/>
-                        <span class="error" th:if="${article.statutEnchere == 1}" th:unless="${userCredit > article.prixVente}" th:text="#{auction.cantBid}"/>
+                                <label for="inputPrice" ></label>
+                                <input id="inputPrice" type="number" name="inputPrice" th:text="#{auction.amount}">
+                                <button type="submit" th:text="#{auction.bid}"></button>
+                            </form>
+                            <span class="error" th:unless="${article.statutEnchere == 1}" th:text="#{auction.notStarted}" />
+                            <span class="error" th:if="${article.statutEnchere == 1}" th:unless="${userCredit > article.prixVente}" th:text="#{auction.cantBid}"/>
+                        </div>
+                        <span class="warning" sec:authorize="isAnonymous()" th:text="#{auction.signInToBid}"/>
                     </div>
                     <div class="col-md-2"></div>
                 </div>
