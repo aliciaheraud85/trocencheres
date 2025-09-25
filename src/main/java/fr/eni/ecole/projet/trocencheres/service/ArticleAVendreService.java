@@ -17,18 +17,12 @@ public class ArticleAVendreService {
     private final CategorieRepository categorieRepository;
     private final AdresseRepository adresseRepository;
     private final EnchereRepository enchereRepository;
-    private final UtilisateurRepository utilisateurRepository;
-    private final UtilisateurService utilisateurService;
-    private final UserService userService;
 
-    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, EnchereRepository enchereRepository, UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService, UserService userService) {
+    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, EnchereRepository enchereRepository) {
         this.articleRepository = articleRepository;
         this.categorieRepository = categorieRepository;
         this.adresseRepository = adresseRepository;
         this.enchereRepository = enchereRepository;
-        this.utilisateurRepository = utilisateurRepository;
-        this.utilisateurService = utilisateurService;
-        this.userService = userService;
     }
 
     public List<ArticleAVendre> getAuctionList(){
@@ -145,11 +139,6 @@ public class ArticleAVendreService {
         }
     }
 
-    public Utilisateur getHighestBidder(int articleId) {
-        Optional<Utilisateur> user = utilisateurRepository.findLastBidder(articleId);
-        return user.orElse(null);
-    }
-
     public String getHighestBidderUsername(int articleId) throws SQLException {
         Optional<String> result = enchereRepository.findLastBidderUsername(articleId);
         if (result.isPresent()) {
@@ -169,5 +158,21 @@ public class ArticleAVendreService {
             throw new RuntimeException("Aucun article trouvé avec l'id " + updatedArticle.getNoArticle());
 
         }
+    }
+
+    public void activateAuctions() {
+        List<ArticleAVendre> auctionStartingToday = articleRepository.findAuctionsStartingToday();
+        auctionStartingToday.forEach(article -> {
+            article.setStatutEnchere(1);
+            articleRepository.updateArticleAVendre(article);
+        });
+    }
+
+    public void endAuctions() {
+        List<ArticleAVendre> auctionEndingToday = articleRepository.findAuctionsStartingToday();
+        auctionEndingToday.forEach(article -> {
+            article.setStatutEnchere(2);
+            articleRepository.updateArticleAVendre(article);
+        });
     }
 }

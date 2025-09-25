@@ -2,7 +2,6 @@ package fr.eni.ecole.projet.trocencheres.repository;
 
 import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -55,6 +54,15 @@ public class ArticleAVendreRepository {
         }
     };
 
+    private static final RowMapper<ArticleAVendre> MAPPER_DATE_TODAY = new RowMapper<ArticleAVendre>() {
+        @Override
+        public ArticleAVendre mapRow(ResultSet rs, int rowNum) throws SQLException {
+            ArticleAVendre a = new ArticleAVendre();
+            a.setNoArticle(rs.getInt("no_article"));
+            return a;
+        }
+    };
+
     public Optional<ArticleAVendre> findById(int id) {
         List<ArticleAVendre> list = jdbc.query("select * from ARTICLES_A_VENDRE where no_article = ?", MAPPER, id);
         return list.stream().findFirst();
@@ -89,7 +97,7 @@ public class ArticleAVendreRepository {
 
         }, keyHolder);
 
-        Number generatedId =  keyHolder.getKey();
+        Number generatedId = keyHolder.getKey();
         return generatedId != null ? generatedId.intValue() : -1;
     }
 
@@ -99,7 +107,7 @@ public class ArticleAVendreRepository {
 
     public int updatePrixVente(ArticleAVendre article) {
         String queryString = "update ARTICLES_A_VENDRE set prix_vente = ? where no_article = ?";
-        return jdbc.update(queryString, article.getPrixVente() , article.getNoArticle());
+        return jdbc.update(queryString, article.getPrixVente(), article.getNoArticle());
     }
 
     public List<ArticleAVendre> findByCategoryAndName(int categoryId, String namePattern) {
@@ -139,10 +147,23 @@ public class ArticleAVendreRepository {
 
     public int updateArticleAVendre(ArticleAVendre article) {
         return jdbc.update("update ARTICLES_A_VENDRE set nom_article = ?, description = ?, date_debut_encheres = ?, date_fin_encheres = ?, prix_initial = ?, no_adresse_retrait = ? where no_article = ?",
-                article.getNomArticle(), article.getDescription(), article.getDateDebutEncheres(), article.getDateFinEncheres(), article.getPrixInitial(),article.getNoAdresseRetrait(), article.getNoArticle());
+                article.getNomArticle(), article.getDescription(), article.getDateDebutEncheres(), article.getDateFinEncheres(), article.getPrixInitial(), article.getNoAdresseRetrait(), article.getNoArticle());
     }
 
     public List<ArticleAVendre> findBySellerId(String sellerId) {
         return jdbc.query("select * from ARTICLES_A_VENDRE where id_utilisateur = ?", MAPPER, sellerId);
+    }
+
+    public List<ArticleAVendre> findAuctionsStartingToday() {
+        LocalDate now = LocalDate.now();
+        LocalDate today = LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth());
+        LocalDate tomorrow = LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth()+1);
+        return jdbc.query("select no_article from ARTICLES_A_VENDRE where (date_debut_encheres BETWEEN ? AND ?)", MAPPER_DATE_TODAY, today, tomorrow);
+    }
+
+    public List<ArticleAVendre> findAuctionsEndingToday() {
+        LocalDate now = LocalDate.now();
+        LocalDate yesterday = LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth()-1);
+        return jdbc.query("select no_article from ARTICLES_A_VENDRE where date_fin_encheres = ?", MAPPER_DATE_TODAY, yesterday);
     }
 }
