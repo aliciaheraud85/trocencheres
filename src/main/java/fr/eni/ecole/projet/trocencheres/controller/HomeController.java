@@ -217,7 +217,9 @@ public class HomeController {
         if (article == null) {
             return "redirect:/index";
         }
+        String username = principal != null ? principal.getName() : null;
         model.addAttribute("article", article);
+        model.addAttribute("profile", username);
         model.addAttribute("categories", articleAVendreService.getCategoriesList());
         model.addAttribute("adresse", articleAVendreService.getAdresseList());
         return "sale/modif-sale";
