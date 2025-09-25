@@ -26,7 +26,6 @@
                           <div class="card-body cardUser">
                               <p><span th:text="#{home.date}" /><span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
                               <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile}"></span></p>
-                              <!-- If user is authenticated, show quick filters -->
                               <a th:href="@{'/'(view='participating', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.bids}" class="no-decoration"></a><br>
                               <a th:href="@{'/'(view='won', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.gains}" class="no-decoration"></a><br>
                               <a th:href="@{'/'(view='mySales', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.sales}" class="no-decoration"></a>
@@ -62,7 +61,7 @@
                       </form>
                   </div>
                   <div class="col-md-4 text-end">
-                      <a th:href="@{/sale/add-sale}" class="btn btn-dark">Ajouter une vente</a>
+                      <a th:href="@{/sale/add-sale}" class="btn btn-dark" th:text="#{home.createAuction}"></a>
                   </div>
               </div>
               <div class="row mb-3">

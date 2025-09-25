@@ -21,7 +21,6 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
                     <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-                    <!-- Change to display user name when logged in -->
                     <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile.utilisateur.pseudo}"></span></p>
                 </div>
             </div>
@@ -42,7 +41,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="categorie" class="form-label" th:text="#{create.category}"></label>
                                 <select class="form-select" id="categorie" th:field="*{noCategorie}" required>
-                                    <option value="1">Sélectionner</option>
+                                    <option value="1" th:text="#{create.select}"></option>
                                     <option th:each="categorie : ${categories}" th:value="${categorie.noCategorie}" th:text="${categorie.libelle}"></option>
                                 </select>
                             </div>
