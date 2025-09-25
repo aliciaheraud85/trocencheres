@@ -15,15 +15,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-2"></div>
         <div class="col-md-4 text-center mt-2">
-<<<<<<< HEAD
-          <h1 th:text="#{editAuction.h1}"></h1>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2 dateUser d-flex flex-column align-items-center justify-content-center">
-          <p><span th:text="#{home.date}" /><span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-          <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile}"></span></p>
-=======
-          <h1 class="title1">Modifier la vente</h1>
+          <h1 class="title1" th:text="#{editAuction.h1}">Modifier la vente</h1>
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-3">
@@ -33,7 +25,6 @@
               <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile}"></span></p>
             </div>
           </div>
->>>>>>> css-sale
         </div>
       </div>
       <div class="row">
@@ -82,16 +73,11 @@
               </div>
               <div class="col-md-4 mb-5"></div>
               <div class="row mb-5">
-<<<<<<< HEAD
-                <div class="col-md-12 d-flex justify-content-end">
-                  <button type="submit" class="btn btn-primary" th:text="#{editAuction.save}"></button>
-=======
                 <div class="col-12 col-md-3 mb-1">
                   <a href="/" class="btn btn-outline-dark">Retour</a>
->>>>>>> css-sale
                 </div>
                 <div class="col-12 col-md-6 d-flex justify-content-center mb-1">
-                  <button type="submit" class="btn btn-dark">Enregistrer</button>
+                  <button type="submit" class="btn btn-dark" th:text="#{editAuction.save}">Enregistrer</button>
                 </div>
                 <div class="col-md-3"></div>
               </div>
