@@ -17,18 +17,12 @@ public class ArticleAVendreService {
     private final CategorieRepository categorieRepository;
     private final AdresseRepository adresseRepository;
     private final EnchereRepository enchereRepository;
-    private final UtilisateurRepository utilisateurRepository;
-    private final UtilisateurService utilisateurService;
-    private final UserService userService;
 
-    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, EnchereRepository enchereRepository, UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService, UserService userService) {
+    public ArticleAVendreService(ArticleAVendreRepository articleRepository, CategorieRepository categorieRepository, AdresseRepository adresseRepository, EnchereRepository enchereRepository) {
         this.articleRepository = articleRepository;
         this.categorieRepository = categorieRepository;
         this.adresseRepository = adresseRepository;
         this.enchereRepository = enchereRepository;
-        this.utilisateurRepository = utilisateurRepository;
-        this.utilisateurService = utilisateurService;
-        this.userService = userService;
     }
 
     public List<ArticleAVendre> getAuctionList(){
@@ -143,11 +137,6 @@ public class ArticleAVendreService {
         if (success == 0) {
             throw new SQLException("database enchere insert failed");
         }
-    }
-
-    public Utilisateur getHighestBidder(int articleId) {
-        Optional<Utilisateur> user = utilisateurRepository.findLastBidder(articleId);
-        return user.orElse(null);
     }
 
     public String getHighestBidderUsername(int articleId) throws SQLException {
