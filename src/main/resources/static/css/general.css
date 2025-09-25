@@ -8,7 +8,20 @@
     color: #757575;
 }
 
+.success {
+    color: limegreen;
+}
+
+.error {
+    color: orangered;
+}
+
 .title1{
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 4em;
+}
+
+.h1{
     font-family: "Bebas Neue", sans-serif;
     font-size: 4em;
 }
