@@ -13,12 +13,31 @@
     font-size: 4em;
 }
 
+h2, h3{
+    font-family: "Bebas Neue", sans-serif;
+}
+
 .center-main{
     font-family: Inter, sans-serif;
 }
 
 .imgArticle{
     border: 1px solid #757575;
+}
+
+.buttonSave{
+    display:flex;
+    justify-content: end;
+}
+
+.buttonCancelAuction{
+    display: flex;
+    justify-content: center;
+}
+
+.buttonCancel{
+    display: flex;
+    justify-content: start;
 }
 
 @media screen and (max-width: 1400px){
@@ -40,4 +59,18 @@
     .cardUser{
         font-size: 0.8em;
     }
+}
+
+@media screen and (max-width: 768px){
+    .buttonRow{
+        display: flex;
+    }
+    .buttonSave,
+    .buttonCancel,
+    .buttonCancelAuction {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
 }
