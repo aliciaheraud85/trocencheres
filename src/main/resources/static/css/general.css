@@ -8,6 +8,10 @@
     color: #757575;
 }
 
+#inputPrice {
+    width: 5rem;
+}
+
 .success {
     color: limegreen;
 }
