@@ -4,7 +4,7 @@
                     contentPage=~{:: .center-main})}">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title th:text="#{editProfile.title}">Modifier le profil</title>
 </head>
 <body>
@@ -14,7 +14,7 @@
             <div class="row mt-3 mb-5">
                 <div class="col-md-2"></div>
                 <div class="col-md-8 text-center">
-                    <h1 th:text="#{editProfile.h1}">Modifier le profil</h1>
+                    <h1 th:text="#{editProfile.h1}"></h1>
                 </div>
                 <div class="col-md-2"></div>
             </div>
@@ -25,49 +25,52 @@
                     <form th:action="@{/user/profile/save}" th:object="${profile}" method="post">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.username}" class="form-label">Pseudo</label>
-                                <input type="text" th:field="*{utilisateur.pseudo}" class="form-control" />
+                                <label th:text="#{userForm.label.username}" class="form-label"></label>
+                                <input type="text" th:field="*{utilisateur.pseudo}" class="form-control"/>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.lastName}" class="form-label">Nom</label>
-                                <input type="text" th:field="*{utilisateur.nom}" class="form-control" />
+                                <label th:text="#{userForm.label.lastName}" class="form-label"></label>
+                                <input type="text" th:field="*{utilisateur.nom}" class="form-control"/>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.firstName}" class="form-label">Prénom</label>
-                                <input type="text" th:field="*{utilisateur.prenom}" class="form-control" />
+                                <label th:text="#{userForm.label.firstName}" class="form-label"></label>
+                                <input type="text" th:field="*{utilisateur.prenom}" class="form-control"/>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.email}" class="form-label">Email</label>
-                                <input type="email" th:field="*{utilisateur.email}" class="form-control" />
+                                <label th:text="#{userForm.label.email}" class="form-label"></label>
+                                <input type="email" th:field="*{utilisateur.email}" class="form-control"/>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.phone}" class="form-label">Téléphone</label>
-                                <input type="text" th:field="*{utilisateur.telephone}" class="form-control" />
+                                <label th:text="#{userForm.label.phone}" class="form-label"></label>
+                                <input type="text" th:field="*{utilisateur.telephone}" class="form-control"/>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{editProfile.inputPassword}" class="form-label">Mot de passe</label>
-                                <input type="password" th:field="*{utilisateur.motDePasse}" class="form-control" />
+                                <label th:text="#{editProfile.inputPassword}" class="form-label"></label>
+                                <input type="password" th:field="*{utilisateur.motDePasse}" class="form-control"/>
                             </div>
 
                             <div class="col-md-12 mt-4 mb-2">
                                 <h3 th:text="#{userForm.h3.address}">Adresse</h3>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label th:text="#{userForm.label.street}" class="form-label">Rue</label>
-                                <input type="text" th:field="*{adresse.rue}" class="form-control" />
+                                <label th:text="#{userForm.label.street}" class="form-label"></label>
+                                <input type="text" th:field="*{adresse.rue}" class="form-control"/>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label th:text="#{userForm.label.postalCode}" class="form-label">Code Postal</label>
-                                <input type="text" th:field="*{adresse.codePostal}" class="form-control" />
+                                <label th:text="#{userForm.label.postalCode}" class="form-label"></label>
+                                <input type="text" th:field="*{adresse.codePostal}" class="form-control"/>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label th:text="#{userForm.label.city}" class="form-label">Ville</label>
-                                <input type="text" th:field="*{adresse.ville}" class="form-control" />
+                                <label th:text="#{userForm.label.city}" class="form-label"></label>
+                                <input type="text" th:field="*{adresse.ville}" class="form-control"/>
                             </div>
 
                             <div class="col-md-12 mt-4 mb-5 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-2" th:text="#{userForm.save}">Enregistrer</button>
-                                <a th:href="@{/user/profile}" class="btn btn-outline-secondary" th:text="#{userForm.cancel}">Annuler</a>
+                                <button type="submit" class="btn btn-primary me-2" th:text="#{userForm.save}">
+                                    Enregistrer
+                                </button>
+                                <a th:href="@{/user/profile}" class="btn btn-outline-secondary"
+                                   th:text="#{userForm.cancel}">Annuler</a>
                             </div>
                         </div>
                     </form>

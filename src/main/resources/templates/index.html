@@ -26,7 +26,6 @@
                           <div class="card-body cardUser">
                               <p><span th:text="#{home.date}" /><span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
                               <p th:if="${profile != null}"><span th:text="#{auction.participant}+${profile}"></span></p>
-                              <!-- If user is authenticated, show quick filters -->
                               <a th:href="@{'/'(view='participating', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.bids}" class="no-decoration"></a><br>
                               <a th:href="@{'/'(view='won', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.gains}" class="no-decoration"></a><br>
                               <a th:href="@{'/'(view='mySales', categoryId=${selectedCategoryId}, q=${param.q})}" th:text="#{home.sales}" class="no-decoration"></a>
@@ -62,7 +61,7 @@
                       </form>
                   </div>
                   <div class="col-md-4 text-end">
-                      <a th:href="@{/sale/add-sale}" class="btn btn-dark">Ajouter une vente</a>
+                      <a th:href="@{/sale/add-sale}" class="btn btn-dark" th:text="#{home.createAuction}"></a>
                   </div>
               </div>
               <div class="row mb-3">
@@ -77,7 +76,7 @@
                                       <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid imgArticle">
                                   </div>
                                   <div class="col-md-8">
-                                      <p><span th:text="#{home.price}" /><span th:text="${article.prixVente == 0 ? article.prixInitial : article.prixVente + ' '}"></span><span th:text="#{home.credits}" /></p>
+                                      <p><span th:text="#{home.price}" /><span th:text="${article.prixVente == 0 ? article.prixInitial + ' ' : article.prixVente + ' '}"></span><span th:text="#{home.credits}" /></p>
                                       <p><span th:text="#{home.auctionEnd}" /><span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
                                       <p><span th:text="#{home.seller}" /><a th:href="@{/vendeur/profil(pseudo=${article.idUtilisateur})}" th:text="${article.idUtilisateur}" class="no-decoration"></a></p>
                                   </div>
