@@ -2,15 +2,12 @@
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a href="/" class="logo">Trocenchères</a>
+                <a href="/" class="logo" th:text="#{appName}"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Accueil</a>
-                        </li>
                         <li class="nav-item">
                             <label for="locales" th:text="#{lang.change}" style="display:none;"></label>
                             <select id="locales">
@@ -19,6 +16,9 @@
                                 <option value="fr" th:text="#{lang.fr}"></option>
                             </select>
                         </li>
+                        <li class="nav-item"><a href="/?lang=fr">FR</a></li>
+                        <li class="nav-item"><a href="/?lang=en">EN</a></li>
+                        <li class="nav-item"><a href="/logout" th:text="#{disconnect}"></a></li>
                         <li class="nav-item" sec:authorize="isAuthenticated()">
                             <a th:href="@{/user/profile}">Mon profile</a>
                         </li>
