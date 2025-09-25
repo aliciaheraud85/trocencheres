@@ -46,8 +46,8 @@
                                     th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
                                     method="POST">
 
-                                <label for="inputPrice" ></label>
-                                <input id="inputPrice" type="number" name="inputPrice" th:text="#{auction.amount}">
+                                <label for="inputPrice" th:text="#{auction.bidLabel}"></label>
+                                <input id="inputPrice" type="number" name="inputPrice" th:placeholder="#{auction.amount}">
                                 <button type="submit" th:text="#{auction.bid}"></button>
                             </form>
                             <span class="error" th:unless="${article.statutEnchere == 1}" th:text="#{auction.notStarted}" />
