@@ -10,83 +10,114 @@
     <link rel="stylesheet" data-th-href="@{/css/general.css}">
 </head>
 <body>
-    <main class="center-main">
-        <div class="container-fluid">
-            <div class="container">
-                <div class="row mt-3 mb-5">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4 text-center mt-2">
-                        <h1 th:text="#{auction.h1}" class="title1"></h1>
-                        <p class="success" th:if="${status == 'bid_placed'}" th:text="#{auction.success}"></p>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body cardUser">
-                                <p><span th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></p>
-                                <p><span th:text="#{auction.participant}"  sec:authorize="isAuthenticated()"/></p>
-                            </div>
-                        </div>
-                    </div>
+<main class="center-main">
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row mt-3 mb-5">
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4 text-center mt-2">
+                    <h1 th:text="#{auction.h1}" class="title1"></h1>
+                    <p class="success" th:if="${status == 'bid_placed'}" th:text="#{auction.success}"></p>
                 </div>
-                <div class="row d-flex justify-content-center">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
-                        <p><span th:text="#{auction.article}+${article.nomArticle}"></span></p>
-                        <p><span th:text="#{auction.category}+${categorie.libelle}"></span></p>
-                        <p><span th:text="#{auction.description}+${article.description}"></span></p>
-                        <p><span th:text="#{auction.takeOut}+${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span></p>
-                        <p><span th:text="#{auction.seller}+${article.idUtilisateur}"></span></p>
-                    </div>
-                    <div class="col-md-4">
-                        <p><span th:text="#{auction.startingPrice}+${article.prixInitial}"></span></p>
-                        <p><span th:text="#{auction.price}+${article.prixVente}"></span> </p>
-                        <p><span th:text="#{auction.bidder}+${highestBidder != null ? highestBidder : ''}" /></p>
-                        <p><span th:text="#{auction.endDate}+${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span></p>
-                        <div sec:authorize="isAuthenticated()">
-                            <form
-                                    th:action="@{/bid(id=${article.noArticle})}"
-                                    th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
-                                    method="POST">
-
-                                <label for="inputPrice" th:text="#{auction.bidLabel}"></label>
-                                <input id="inputPrice" type="number" name="inputPrice" th:placeholder="#{auction.amount}">
-                                <button type="submit" th:text="#{auction.bid}"></button>
-                            </form>
-                            <span class="error" th:unless="${article.statutEnchere == 1}" th:text="#{auction.notStarted}" />
-                            <span class="error" th:if="${article.statutEnchere == 1}" th:unless="${userCredit > article.prixVente}" th:text="#{auction.cantBid}"/>
-                        </div>
-                        <span class="warning" sec:authorize="isAnonymous()" th:text="#{auction.signInToBid}"/>
-                    </div>
-                    <div class="col-md-2"></div>
-                </div>
-                
-                <div class="row mt-3 mb-5 align-items-center">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4 col-sm-12 d-flex justify-content-center">
-                        <a href="/" class="btn btn-dark me-2" th:text="#{auction.return}"></a>
-                        <div>
-                            <div th:if="${article.statutEnchere == 100}">
-                                <button class="btn btn-outline-dark" disabled th:text="#{auction.cancelled}"></button>
-                            </div>
-                            <div th:if="${article.statutEnchere != 100}">
-                                <div th:if="${canCancel}">
-                                    <form th:action="@{/auction/cancel}" method="post" th:object="${article}">
-                                        <input type="hidden" name="id" th:value="${article.noArticle}" />
-                                        <button type="submit" class="btn btn-danger" th:text="#{auction.cancel}"></button>
-                                    </form>
-                                </div>
-                            </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body cardUser">
+                            <p><span
+                                    th:text="#{home.date}+${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span>
+                            </p>
+                            <p sec:authorize="isAuthenticated()"><span th:text="#{auction.participant}"/><span th:text="${profile}"/></p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                        <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg" alt="" class="img-fluid" style="max-height: 150px;">
-                    </div>
-                    <div class="col-md-2"></div>
                 </div>
             </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <p><span th:text="#{auction.article}+${article.nomArticle}"></span></p>
+                    <p><span th:text="#{auction.category}+${categorie.libelle}"></span></p>
+                    <p><span th:text="#{auction.description}+${article.description}"></span></p>
+                    <p><span
+                            th:text="#{auction.takeOut}+${adresse.rue + ' ' +  adresse.codePostal + ' ' + adresse.ville}"></span>
+                    </p>
+                    <p><span th:text="#{auction.seller}+${article.idUtilisateur}"></span></p>
+                </div>
+                <div class="col-md-4">
+                    <p><span th:text="#{auction.startingPrice}+${article.prixInitial}"></span></p>
+                    <p><span th:text="#{auction.price}+${article.prixVente}"></span></p>
+                    <p><span th:text="#{auction.bidder}+${highestBidder != null ? highestBidder : ''}"/></p>
+                    <p><span
+                            th:text="#{auction.endDate}+${#temporals.format(article.dateFinEncheres, 'dd/MM/yy')}"></span>
+                    </p>
+                    <div sec:authorize="isAuthenticated()" th:if="${profile != article.idUtilisateur}">
+                        <form
+                                th:action="@{/bid(id=${article.noArticle})}"
+                                th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
+                                method="POST">
+
+                            <label for="inputPrice" th:text="#{auction.bidLabel}"></label>
+                            <input id="inputPrice" type="number" name="inputPrice" th:placeholder="#{auction.amount}">
+                            <button type="submit" th:text="#{auction.bid}"></button>
+                        </form>
+                        <span class="error" th:unless="${article.statutEnchere == 1 && userCredit > article.prixVente}"
+                              th:text="#{auction.cantBid}"/>
+                        <span class="warning" th:if="${article.statutEnchere == 0}" th:text="#{auction.notStarted}"/>
+                    </div>
+                    <div sec:authorize="isAnonymous()">
+                        <span class="warning" th:if="${article.statutEnchere == 2}" th:text="#{auction.finished}"/>
+                        <span class="warning" th:unless="${article.statutEnchere == 2}"
+                              th:text="#{auction.signInToBid}"/>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+
+            <div class="row mt-3 mb-5 align-items-center">
+                <div class="col-md-2"></div>
+                <div class="col-md-4 col-sm-12 d-flex justify-content-center">
+                    <a href="/" class="btn btn-dark me-2" th:text="#{auction.return}"></a>
+                    <div th:if="${profile == article.idUtilisateur}" sec:authorize="isAuthenticated()">
+                        <div th:if="${article.statutEnchere == 100}">
+                            <button class="btn btn-outline-dark" disabled th:text="#{auction.cancelled}"></button>
+                        </div>
+                        <div th:unless="${article.statutEnchere == 100}">
+                            <div th:if="${canCancel}">
+                                <form th:action="@{/auction/cancel}" method="post" th:object="${article}">
+                                    <input type="hidden" name="id" th:value="${article.noArticle}"/>
+                                    <button type="submit" class="btn btn-danger" th:text="#{auction.cancel}"></button>
+                                </form>
+                            </div>
+                            <div th:if="${article.statutEnchere == 2}">
+                                <a th:href="@{/auction/complete(id=${article.noArticle})}"><button id="getCredits" class="btn btn-outline-dark" th:text="#{auction.objectGiven}"></button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 d-flex justify-content-center">
+                    <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg"
+                         alt="" class="img-fluid" style="max-height: 150px;">
+                </div>
+                <div class="col-md-2"></div>
+            </div>
         </div>
-    </main>
+    </div>
+    <div id="successModal" class="modal">
+        <a class="cancel"></a>
+        <div class="modal">
+            <h2 class="transact-success" th:text="#{auction.completed.h2}"></h2>
+            <h2 class="transact-error" th:text="#{auction.completedError.h2}"></h2>
+            <a class="close">&times;</a>
+            <div class="content transact-success">
+                <p th:text="#{auction.completed.text}"></p>
+                <a th:text="#{auction.completed.link}" href="/"></a>
+            </div>
+            <div class="content transact-error">
+                <p th:text="#{auction.completedError.text}"></p>
+            </div>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

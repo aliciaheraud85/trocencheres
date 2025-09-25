@@ -6,6 +6,7 @@ import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +86,7 @@ public class HomeController {
     public String auctionDetails(int id, @RequestParam(name = "status", required = false) String status, Principal principal, Model model) {
         int userCredit;
         if (principal != null) {
-            String username = principal != null ? principal.getName() : null;
+            String username = principal.getName();
             userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
             model.addAttribute("userCredit", userCredit);
             model.addAttribute("profile", username);
@@ -121,6 +122,18 @@ public class HomeController {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @GetMapping("/auction/complete")
+    public String completeAuction(int id) {
+        try {
+            utilisateurService.creditWinner(id);
+        } catch (Exception e) {
+            return "redirect:/auction-details?id=" + id;
+//            return ResponseEntity.status(404).build();
+        }
+        return "redirect:/";
+//        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/bid")

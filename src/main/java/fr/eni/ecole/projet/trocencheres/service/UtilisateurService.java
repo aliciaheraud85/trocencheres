@@ -1,9 +1,12 @@
 package fr.eni.ecole.projet.trocencheres.service;
 
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
+import fr.eni.ecole.projet.trocencheres.bo.ArticleAVendre;
 import fr.eni.ecole.projet.trocencheres.bo.Utilisateur;
 import fr.eni.ecole.projet.trocencheres.dto.SignUpRequest;
 import fr.eni.ecole.projet.trocencheres.repository.AdresseRepository;
+import fr.eni.ecole.projet.trocencheres.repository.ArticleAVendreRepository;
+import fr.eni.ecole.projet.trocencheres.repository.EnchereRepository;
 import fr.eni.ecole.projet.trocencheres.repository.UtilisateurRepository;
 import fr.eni.ecole.projet.trocencheres.security.jwt.JWTService;
 import fr.eni.ecole.projet.trocencheres.security.jwt.LoginResponse;
@@ -34,6 +37,10 @@ public class UtilisateurService {
     private AdresseRepository adresseRepository;
 
     private final PasswordEncoder encoder;
+    @Autowired
+    private EnchereRepository enchereRepository;
+    @Autowired
+    private ArticleAVendreRepository articleAVendreRepository;
 
     public UtilisateurService(PasswordEncoder encoder) {
         this.encoder = new BCryptPasswordEncoder();
@@ -79,4 +86,21 @@ public class UtilisateurService {
         return true;
     }
 
+    public void creditWinner(int id) throws SQLException {
+        try {
+            //fixme: doesn't work properly
+            Utilisateur bidder = utilisateurRepository.findLastBidder(id).get();
+            ArticleAVendre article = articleAVendreRepository.findById(id).get();
+            article.setStatutEnchere(3);
+            articleAVendreRepository.updateArticleAVendre(article);
+            bidder.setCredit(bidder.getCredit() - article.getPrixVente());
+            utilisateurRepository.updateUtilisateur(bidder);
+            Utilisateur seller = utilisateurRepository.findByPseudo(article.getIdUtilisateur()).get();
+            seller.setCredit(seller.getCredit() + article.getPrixVente());
+            utilisateurRepository.updateUtilisateur(seller);
+        }
+        catch (Exception e){
+            throw new SQLException("database utilisateur update failed");
+        }
+    }
 }
