@@ -8,12 +8,24 @@
     color: #757575;
 }
 
+.success {
+    color: limegreen;
+}
+
+.warning {
+    color: darkgrey;
+}
+
+.error {
+    color: orangered;
+}
+
 .title1{
     font-family: "Bebas Neue", sans-serif;
     font-size: 4em;
 }
 
-h2, h3{
+h2, h3 {
     font-family: "Bebas Neue", sans-serif;
 }
 
@@ -61,10 +73,11 @@ h2, h3{
     }
 }
 
-@media screen and (max-width: 768px){
-    .buttonRow{
+@media screen and (max-width: 768px) {
+    .buttonRow {
         display: flex;
     }
+
     .buttonSave,
     .buttonCancel,
     .buttonCancelAuction {
@@ -72,5 +85,4 @@ h2, h3{
         justify-content: center;
         margin-bottom: 10px;
     }
-
 }
