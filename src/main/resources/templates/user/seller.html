@@ -15,7 +15,7 @@
             <div class="row mt-3">
                 <div class="col-md-2"></div>
                 <div class="col-md-8 text-center">
-                    <h1 th:text="#{seller.h1}"></h1>
+                    <h1 class="title1" th:text="#{seller.h1}"></h1>
                 </div>
                 <div class="col-md-2"></div>
             </div>
@@ -46,7 +46,7 @@
 
                 <!-- Liste des enchères du vendeur -->
                 <div class="row mt-4">
-                    <div class="col-md-12">
+                    <div class="col-md-12 mb-2">
                         <h2 th:text="#{seller.h2.auctions}"></h2>
                     </div>
                 </div>
@@ -63,13 +63,13 @@
                     <div class="col-md-4 mb-3" th:each="article : ${profile.articles}">
                         <div class="card">
                             <div class="card-header text-center">
-                                <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}"></a>
+                                <a th:href="@{/auction-details(id=${article.noArticle})}" th:text="${article.nomArticle}" class="no-decoration"></a>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <img src="https://img.freepik.com/vecteurs-premium/vecteur-icone-image-par-defaut-page-image-manquante-pour-conception-site-web-application-mobile-aucune-photo-disponible_87543-11093.jpg"
-                                             alt="Image de l'article" class="img-fluid">
+                                             alt="Image de l'article" class="img-fluid imgArticle">
                                     </div>
                                     <div class="col-md-8">
                                         <p><span th:text="#{seller.auction.startingPrice}"></span> <span th:text="${article.prixInitial}"></span></p>
@@ -83,7 +83,11 @@
                         </div>
                     </div>
                 </div> <!-- fin row articles -->
-                <a href="/" class="btn btn-outline-secondary py-2 px-3">Retour</a>
+                <div class="col-md-12 d-flex justify-content-center mt-2 mb-5">
+                    <a href="/" class="btn btn-lg btn-dark">Retour</a>
+                </div>
+                </div>
+
             </div> <!-- fin profile.vendeur != null -->
 
         </div> <!-- fin container -->

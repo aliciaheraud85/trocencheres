@@ -14,7 +14,7 @@
             <div class="row mt-3 mb-5">
                 <div class="col-md-2"></div>
                 <div class="col-md-8 text-center">
-                    <h1 th:text="#{editProfile.h1}">Modifier le profil</h1>
+                    <h1 th:text="#{editProfile.h1}" class="title1">Modifier le profil</h1>
                 </div>
                 <div class="col-md-2"></div>
             </div>
@@ -65,9 +65,9 @@
                                 <input type="text" th:field="*{adresse.ville}" class="form-control" />
                             </div>
 
-                            <div class="col-md-12 mt-4 mb-5 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-2" th:text="#{userForm.save}">Enregistrer</button>
-                                <a th:href="@{/user/profile}" class="btn btn-outline-secondary" th:text="#{userForm.cancel}">Annuler</a>
+                            <div class="col-md-12 mt-4 mb-5 d-flex justify-content-center">
+                                <button type="submit" class="btn btn-dark me-2" th:text="#{userForm.save}">Enregistrer</button>
+                                <a th:href="@{/user/profile}" class="btn btn-outline-dark" th:text="#{userForm.cancel}">Annuler</a>
                             </div>
                         </div>
                     </form>
