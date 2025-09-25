@@ -21,6 +21,21 @@
     border: 1px solid #757575;
 }
 
+.buttonSave{
+    display:flex;
+    justify-content: end;
+}
+
+.buttonCancelAuction{
+    display: flex;
+    justify-content: center;
+}
+
+.buttonCancel{
+    display: flex;
+    justify-content: start;
+}
+
 @media screen and (max-width: 1400px){
     .title1{
         font-size: 3.5em;
@@ -40,4 +55,18 @@
     .cardUser{
         font-size: 0.8em;
     }
+}
+
+@media screen and (max-width: 768px){
+    .buttonRow{
+        display: flex;
+    }
+    .buttonSave,
+    .buttonCancel,
+    .buttonCancelAuction {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
 }
