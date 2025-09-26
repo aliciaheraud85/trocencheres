@@ -85,7 +85,7 @@ public class HomeController {
     public String auctionDetails(int id, @RequestParam(name = "status", required = false) String status, Principal principal, Model model) {
         int userCredit;
         if (principal != null) {
-            String username = principal != null ? principal.getName() : null;
+            String username = principal.getName();
             userCredit = userService.getUserProfile(principal.getName()).getUtilisateur().getCredit();
             model.addAttribute("userCredit", userCredit);
             model.addAttribute("profile", username);
@@ -121,6 +121,18 @@ public class HomeController {
             System.out.println("This id does not exist");
             return "redirect:/index";
         }
+    }
+
+    @GetMapping("/auction/complete")
+    public String completeAuction(int id) {
+        try {
+            utilisateurService.creditWinner(id);
+        } catch (Exception e) {
+            return "redirect:/auction-details?id=" + id + "&error=" + e.getMessage();
+//            return ResponseEntity.status(404).build();
+        }
+        return "redirect:/";
+//        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/bid")
