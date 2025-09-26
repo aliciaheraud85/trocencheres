@@ -60,7 +60,7 @@
                             <input id="inputPrice" type="number" name="inputPrice" th:placeholder="#{auction.amount}">
                             <button type="submit" th:text="#{auction.bid}"></button>
                         </form>
-                        <span class="error" th:unless="${article.statutEnchere == 1 && userCredit > article.prixVente}"
+                        <span class="error" th:if="${article.statutEnchere == 1 && userCredit > article.prixVente}"
                               th:text="#{auction.cantBid}"/>
                         <span class="warning" th:if="${article.statutEnchere == 0}" th:text="#{auction.notStarted}"/>
                     </div>

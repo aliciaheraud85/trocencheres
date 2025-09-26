@@ -6,7 +6,6 @@ import fr.eni.ecole.projet.trocencheres.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import fr.eni.ecole.projet.trocencheres.bo.Adresse;
 import fr.eni.ecole.projet.trocencheres.bo.Categorie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -129,7 +128,7 @@ public class HomeController {
         try {
             utilisateurService.creditWinner(id);
         } catch (Exception e) {
-            return "redirect:/auction-details?id=" + id;
+            return "redirect:/auction-details?id=" + id + "&error=" + e.getMessage();
 //            return ResponseEntity.status(404).build();
         }
         return "redirect:/";

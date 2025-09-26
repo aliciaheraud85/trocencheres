@@ -88,18 +88,23 @@ public class UtilisateurService {
 
     public void creditWinner(int id) throws SQLException {
         try {
-            //fixme: doesn't work properly
-            Utilisateur bidder = utilisateurRepository.findLastBidder(id).get();
-            ArticleAVendre article = articleAVendreRepository.findById(id).get();
-            article.setStatutEnchere(3);
-            articleAVendreRepository.updateArticleAVendre(article);
-            bidder.setCredit(bidder.getCredit() - article.getPrixVente());
-            utilisateurRepository.updateUtilisateur(bidder);
-            Utilisateur seller = utilisateurRepository.findByPseudo(article.getIdUtilisateur()).get();
-            seller.setCredit(seller.getCredit() + article.getPrixVente());
-            utilisateurRepository.updateUtilisateur(seller);
-        }
-        catch (Exception e){
+            Optional<Utilisateur> bidderOptional = utilisateurRepository.findLastBidder(id);
+            Optional<ArticleAVendre> articleOptional = articleAVendreRepository.findById(id);
+            if (bidderOptional.isPresent() && articleOptional.isPresent()) {
+                Utilisateur bidder = bidderOptional.get();
+                ArticleAVendre article = articleOptional.get();
+                Optional<Utilisateur> sellerOptional = utilisateurRepository.findByPseudo(article.getIdUtilisateur());
+                if (sellerOptional.isPresent()) {
+                    Utilisateur seller = sellerOptional.get();
+                    bidder.setCredit(bidder.getCredit() - article.getPrixVente());
+                    utilisateurRepository.updateUtilisateur(bidder);
+                    article.setStatutEnchere(3);
+                    articleAVendreRepository.updateArticleAVendre(article);
+                    seller.setCredit(seller.getCredit() + article.getPrixVente());
+                    utilisateurRepository.updateUtilisateur(seller);
+                }
+            }
+        } catch (Exception e) {
             throw new SQLException("database utilisateur update failed");
         }
     }
